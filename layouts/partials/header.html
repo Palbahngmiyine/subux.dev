@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html class="" lang="{{ .Site.LanguageCode }}" prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb#">
+
+<head>
+  <meta charset="utf-8" />
+
+  {{ partial "meta.html" . }}
+
+  <title>{{ .Title }}</title>
+  <link rel="canonical" href="{{ .Permalink }}" />
+  {{ $title := .Title }}
+  {{ with .OutputFormats.Get "RSS" }}
+  <link href="{{ .RelPermalink }}" rel="alternate" type="application/rss+xml" title="{{ $title }}" />
+  {{ end }}
+  {{ partial "head_includes.html" . }}
+  <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+
+  <link href="https://fonts.googleapis.com/css?family=Roboto+Mono&display=swap" rel="stylesheet">
+  <style>
+    html,
+    body {
+      background-color: #202124;
+      color: white !important;
+      font-family: 'Roboto Mono', monospace !important;
+    }
+
+    a {
+      color: white;
+      font-family: 'Roboto Mono', monospace;
+      text-decoration: none;
+    }
+
+    p {
+      margin-top: 0;
+      margin-bottom: 0;
+    }
+
+    em {
+      font-size: 0.25rem;
+      color: #777;
+    }
+  </style>
+</head>

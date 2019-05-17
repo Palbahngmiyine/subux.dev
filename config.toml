@@ -1,0 +1,35 @@
+baseURL = "https://subux.dev"
+languageCode = "ko-kr"
+
+title = "Subux - Subin Lee"
+enableEmoji = true 
+theme = "basic"
+copyright = "© 2019 Subin Lee All Rights Reserved."
+description = "Welcome!"
+
+[taxonomies]
+  category = "categories"
+  series = "series"
+  tag = "tags"
+
+[Permalinks]
+  post = "post/:slug"
+
+[[params.menu]]
+  name = "articles"
+  url = "post/"
+
+[[params.menu]]
+  name = "about"
+  url = "about/"
+
+[privacy]
+  [privacy.googleAnalytics]
+    anonymizeIP = true
+    respectDoNotTrack = true
+    useSessionStorage = true
+  [privacy.twitter]
+    enableDNT = true
+  [privacy.youtube]
+    privacyEnhanced = true
+
