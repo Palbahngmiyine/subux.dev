@@ -41,7 +41,10 @@ description = "Hi, I'm Subin."
 
 ### Careers
 ---
+> *Web Engineer*  
+> Rowan Inc, 2020.04.01 ~<br>
+> Currently I'm in the process of switching roles from PHP Web Engineer to Java Web Engineer. <br><br>
 > *Full Stack Programmer*  
-> Travolution Inc, 2016.09.26 ~  
+> Travolution Inc, 2016.09.26 ~ 2019.06.14   
 > Designed Database Architecture and Developed(as Front-End, Back-End) <a href="https://www.seoultravelpass.com" target="_blank">Seoul PASS</a> and Bank of Trip Services.<br>
 > <ul><li>I've taken action that The traffic was distributed by switching from an existing EC2 - Local DB system to an Elastic Beanstalk - RDS system.</li><li>I adapted MVC Pattern using Laravel Framework on Back-End Systems</li><li>I adopted Bundler(Webpack) on Renewal Seoul PASS Front-End Service</li><ul>
