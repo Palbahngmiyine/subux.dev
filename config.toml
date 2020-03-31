@@ -4,7 +4,7 @@ languageCode = "ko-kr"
 title = "Subux - Subin Lee"
 enableEmoji = true 
 theme = "basic"
-copyright = "© 2019 Subin Lee"
+copyright = "© 2020 Subin Lee"
 description = "Welcome!"
 
 [taxonomies]
@@ -17,7 +17,7 @@ description = "Welcome!"
 
 [[params.menu]]
   name = "articles"
-  url = "post/"
+  url = "https://subux.tistory.com/"
 
 [[params.menu]]
   name = "about"
