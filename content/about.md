@@ -5,46 +5,54 @@ description = "Hi, I'm Subin."
 +++
 
 ### Websites
+
 ---
-[GitHub](https://github.com/subux), 
-[Facebook](https://www.facebook.com/subux.chandar), 
+
+[GitHub](https://github.com/palbangmiyine),
+[Facebook](https://www.facebook.com/subux.chandar),
 [Linkedin](https://www.linkedin.com/in/subin-lee-50875b128/)
 
 ### Contact
+
 ---
+
 [chandar.sblee@gmail.com](mailto:chandar.sblee@gmail.com) or [+821051693100](sms:+821051693100)
 
 ### Who am I?
+
 ---
+
 > I'm Subin, as a Software Engineer.  
 > I believe that technology helps people can focus on valuable things.  
 > Recently I'm interested in Cloud Architecture for Services.
 
 ### Skills
+
 ---
-> *Programming Languages*  
-> PHP(Intermediate), SQL, Javascript(ECMAScript2015~), Typescript, Java, Scala <br><br> 
-> *Front-End Technologies*  
-> React.js, Next.js, Redux, jQuery, Angular <br><br>
-> *Back-End Technologies*  
-> Laravel Framework, Spring MVC Framework <br><br>
-> *Database Technologies*  
-> MySQL(InnoDB Engine) <br><br>
-> *Infrastructure Engineering*  
+
+> _Programming Languages_  
+> PHP(Intermediate), SQL, Javascript(ECMAScript2015~), Typescript, Java, Scala <br><br> > _Front-End Technologies_  
+> React.js, Next.js, Redux, jQuery, Angular <br><br> > _Back-End Technologies_  
+> Laravel Framework, Spring MVC Framework <br><br> > _Database Technologies_  
+> MySQL(InnoDB Engine) <br><br> > _Infrastructure Engineering_  
 > Linux(Ubuntu, Amazon Linux), Apache(as Server) <br>
 > AWS: EC2, Elastic Beanstalk, RDS, ELB(ALB), CloudWatch, S3, CloudFront, Lambda <br>
-> GCP: Compute Engine, App Engine, StackDriver, Firebase(used only hosting service) <br><br>
-> *Version Control Service*  
-> Github, Bitbucket <br><br>
-> *CI/CD Managed Service*  
+> GCP: Compute Engine, App Engine, StackDriver, Firebase(used only hosting service) <br><br> > _Version Control Service_  
+> Github, Bitbucket <br><br> > _CI/CD Managed Service_  
 > Bitrise
 
 ### Careers
+
 ---
-> *Web Engineer*  
-> Rowan Inc, 2020.04.01 ~<br>
-> Currently I'm in the process of switching roles from PHP Web Engineer to Java Web Engineer. <br><br>
-> *Full Stack Programmer*  
-> Travolution Inc, 2016.09.26 ~ 2019.06.14   
+
+> _Full Stack Programmer / Back End Engineer_
+> Passion Oil Inc / Creator Club 2021.02.15
+> TBA
+> _Web Engineer_  
+> Rowan Inc, 2020.04.01 ~ 2021.02.10<br>
+> TBA <br><br>
+> _Full Stack Programmer_  
+> Travolution Inc, 2016.09.26 ~ 2019.06.14  
 > Designed Database Architecture and Developed(as Front-End, Back-End) <a href="https://www.seoultravelpass.com" target="_blank">Seoul PASS</a> and Bank of Trip Services.<br>
+>
 > <ul><li>I've taken action that The traffic was distributed by switching from an existing EC2 - Local DB system to an Elastic Beanstalk - RDS system.</li><li>I adapted MVC Pattern using Laravel Framework on Back-End Systems</li><li>I adopted Bundler(Webpack) on Renewal Seoul PASS Front-End Service</li><ul>
