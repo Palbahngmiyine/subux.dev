@@ -30,15 +30,15 @@ description = "Hi, I'm Subin."
 
 ---
 
-> *Programming Languages*
+> *Programming Languages*  
 > PHP(Intermediate), SQL, Javascript(ECMAScript2015~), Typescript, Java, Scala <br><br> 
 > *Front-End Technologies*  
 > React.js, Next.js, Redux, jQuery, Angular <br><br> 
-> *Back-End Technologies* 
+> *Back-End Technologies*  
 > Laravel Framework, Spring MVC Framework <br><br> 
 > *Database Technologies*  
 > MySQL(InnoDB Engine) <br><br> 
-> *Infrastructure Engineering*
+> *Infrastructure Engineering*  
 > Linux(Ubuntu, Amazon Linux), Apache(as Server) <br>
 > AWS: EC2, Elastic Beanstalk, RDS, ELB(ALB), CloudWatch, S3, CloudFront, Lambda <br>
 > GCP: Compute Engine, App Engine, StackDriver, Firebase(used only hosting service) <br><br> 
@@ -51,13 +51,13 @@ description = "Hi, I'm Subin."
 
 ---
 
-> *Full Stack Programmer / Back End Engineer*
+> *Full Stack Programmer / Back End Engineer*  
 > Passion Oil Inc / Creator Club 2021.02.15 <br>
 > TBA<br><br>
 > *Web Engineer*  
 > Rowan Inc, 2020.04.01 ~ 2021.02.10<br>
 > TBA <br><br>
-> *Full Stack Programmer*
+> *Full Stack Programmer*  
 > Travolution Inc, 2016.09.26 ~ 2019.06.14  
 > Designed Database Architecture and Developed(as Front-End, Back-End) <a href="https://www.seoultravelpass.com" target="_blank">Seoul PASS</a> and Bank of Trip Services.<br>
 >
