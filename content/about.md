@@ -30,28 +30,34 @@ description = "Hi, I'm Subin."
 
 ---
 
-> _Programming Languages_  
-> PHP(Intermediate), SQL, Javascript(ECMAScript2015~), Typescript, Java, Scala <br><br> > _Front-End Technologies_  
-> React.js, Next.js, Redux, jQuery, Angular <br><br> > _Back-End Technologies_  
-> Laravel Framework, Spring MVC Framework <br><br> > _Database Technologies_  
-> MySQL(InnoDB Engine) <br><br> > _Infrastructure Engineering_  
+> *Programming Languages*
+> PHP(Intermediate), SQL, Javascript(ECMAScript2015~), Typescript, Java, Scala <br><br> 
+> *Front-End Technologies*  
+> React.js, Next.js, Redux, jQuery, Angular <br><br> 
+> *Back-End Technologies* 
+> Laravel Framework, Spring MVC Framework <br><br> 
+> *Database Technologies*  
+> MySQL(InnoDB Engine) <br><br> 
+> *Infrastructure Engineering*
 > Linux(Ubuntu, Amazon Linux), Apache(as Server) <br>
 > AWS: EC2, Elastic Beanstalk, RDS, ELB(ALB), CloudWatch, S3, CloudFront, Lambda <br>
-> GCP: Compute Engine, App Engine, StackDriver, Firebase(used only hosting service) <br><br> > _Version Control Service_  
-> Github, Bitbucket <br><br> > _CI/CD Managed Service_  
+> GCP: Compute Engine, App Engine, StackDriver, Firebase(used only hosting service) <br><br> 
+> *Version Control Service*  
+> Github, Bitbucket <br><br> 
+> *CI/CD Managed Service*  
 > Bitrise
 
 ### Careers
 
 ---
 
-> _Full Stack Programmer / Back End Engineer_
-> Passion Oil Inc / Creator Club 2021.02.15
-> TBA
-> _Web Engineer_  
+> *Full Stack Programmer / Back End Engineer*
+> Passion Oil Inc / Creator Club 2021.02.15 <br>
+> TBA<br><br>
+> *Web Engineer*  
 > Rowan Inc, 2020.04.01 ~ 2021.02.10<br>
 > TBA <br><br>
-> _Full Stack Programmer_  
+> *Full Stack Programmer*
 > Travolution Inc, 2016.09.26 ~ 2019.06.14  
 > Designed Database Architecture and Developed(as Front-End, Back-End) <a href="https://www.seoultravelpass.com" target="_blank">Seoul PASS</a> and Bank of Trip Services.<br>
 >
