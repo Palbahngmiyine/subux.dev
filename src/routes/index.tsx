@@ -1,18 +1,15 @@
-import Counter from "~/components/Counter";
-import "./index.css";
+import { Link } from "solid-app-router";
+import { MetaProvider, Title } from "solid-meta";
 
 export default function Home() {
   return (
-    <main>
+    <>
+      <Title>Subux - Subin Lee</Title>
       <h1>Hello world!</h1>
-      <Counter />
-      <p>
-        Visit{" "}
-        <a href="https://solidjs.com" target="_blank">
-          solidjs.com
-        </a>{" "}
-        to learn how to build Solid apps.
-      </p>
-    </main>
+      <Link href="/about">About me</Link>
+      <br />
+      <br />
+      <a href="https://blog.subux.dev" target="_blank" rel="noopener">Go to korean blog page</a>
+    </>
   );
 }
