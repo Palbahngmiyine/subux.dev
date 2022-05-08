@@ -9,7 +9,7 @@
 }
 
 main {
-    @apply container mx-auto;
+    @apply container px-8 lg:mx-auto lg:px-0;
 }
 
 h1 {
