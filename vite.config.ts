@@ -11,6 +11,6 @@ export default defineConfig({
       }),
       enforce: "pre",
     },
-    solid({ ssr: false, extensions: [".mdx", ".md"] }),
+    solid({ ssr: true, extensions: [".mdx", ".md"] }),
   ],
 });
