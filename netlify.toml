@@ -6,3 +6,9 @@
   command = "npm run start"
   targetPort = 8888
   framework = "#custom"
+
+[[redirects]]
+  force = true
+  from = "/*"
+  to = "/index.html"
+  status = 200
