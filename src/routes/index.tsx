@@ -1,10 +1,9 @@
 import { Link } from "solid-app-router";
-import { MetaProvider, Title } from "solid-meta";
 
 export default function Home() {
   return (
     <>
-      <Title>Subux - Subin Lee</Title>
+      <title>Home</title>
       <h1>Hello world!</h1>
       <Link href="/about">About me</Link>
       <br />
