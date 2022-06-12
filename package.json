@@ -9,9 +9,15 @@
   "devDependencies": {
     "@mdx-js/rollup": "^2.0.0",
     "autoprefixer": "^10.4.7",
+<<<<<<< HEAD
     "postcss": "^8.4.13",
     "solid-app-router": "^0.3.1",
     "solid-js": "^1.4.3",
+=======
+    "postcss": "^8.4.14",
+    "solid-app-router": "^0.3.3",
+    "solid-js": "^1.4.2",
+>>>>>>> 87e7de1764ec5daf74e9202a3e08e582f913421e
     "solid-mdx": "^0.0.6",
     "solid-meta": "^0.27.3",
     "solid-start": "next",
