@@ -10,7 +10,7 @@
     "@mdx-js/rollup": "^2.0.0",
     "autoprefixer": "^10.4.7",    
     "solid-app-router": "^0.3.3",
-    "solid-js": "^1.4.3",
+    "solid-js": "^1.4.4",
     "postcss": "^8.4.14",
     "solid-mdx": "^0.0.6",
     "solid-meta": "^0.27.3",
