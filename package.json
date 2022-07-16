@@ -1,27 +1,18 @@
 {
   "name": "subux.dev",
-  "scripts": {
-    "dev": "solid-start dev",
-    "build": "solid-start build",
-    "start": "solid-start start"
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {    
+    "dev": "vite",
+    "build": "vite build",
+    "serve": "vite preview"
   },
-  "type": "module",
+  "license": "MIT",
   "devDependencies": {
-    "@mdx-js/rollup": "^2.0.0",
-    "autoprefixer": "^10.4.7",    
-    "solid-app-router": "^0.3.3",
-    "solid-js": "^1.4.4",
-    "postcss": "^8.4.14",
-    "solid-mdx": "^0.0.6",
-    "solid-meta": "^0.27.3",
-    "solid-start": "next",
-    "solid-start-node": "next",
-    "tailwindcss": "^3.0.24",
-    "typescript": "^4.4.3",
-    "undici": "^4.12.2",
-    "vite": "^2.8.6"
+    "vite": "^3.0.0",
+    "vite-plugin-solid": "^2.3.0"
   },
-  "engines": {
-    "node": ">=14"
+  "dependencies": {
+    "solid-js": "^1.4.7"
   }
 }
