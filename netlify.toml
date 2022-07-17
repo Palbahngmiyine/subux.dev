@@ -1,8 +1,6 @@
-[build]
-  command = "npm run build"
-  publish = "dist"
+[[plugins]]
+package = "@netlify/plugin-nextjs"
 
-[dev]
-  command = "npm run start"
-  targetPort = 8888
-  framework = "#custom"
+[build]
+command = "pnpm generate"
+publish = "out"

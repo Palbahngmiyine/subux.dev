@@ -1,27 +1,28 @@
 {
   "name": "subux.dev",
+  "description": "Just about me",
+  "private": false,
   "scripts": {
-    "dev": "solid-start dev",
-    "build": "solid-start build",
-    "start": "solid-start start"
+    "dev": "next",
+    "build": "next build",
+    "start": "next start",
+    "generate": "next build && next export"
   },
-  "type": "module",
+  "dependencies": {
+    "@mdx-js/loader": "^2.1.2",
+    "@mdx-js/react": "^2.1.2",
+    "@next/mdx": "^9.5.5",
+    "next": "^12.2.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
   "devDependencies": {
-    "@mdx-js/rollup": "^2.0.0",
-    "autoprefixer": "^10.4.7",    
-    "solid-app-router": "^0.3.3",
-    "solid-js": "^1.4.4",
+    "@netlify/plugin-nextjs": "^4.12.2",
+    "autoprefixer": "^10.4.7",
+    "eslint": "^8.20.0",
+    "eslint-config-next": "^12.2.2",
     "postcss": "^8.4.14",
-    "solid-mdx": "^0.0.6",
-    "solid-meta": "^0.27.3",
-    "solid-start": "next",
-    "solid-start-node": "next",
-    "tailwindcss": "^3.0.24",
-    "typescript": "^4.4.3",
-    "undici": "^4.12.2",
-    "vite": "^2.8.6"
-  },
-  "engines": {
-    "node": ">=14"
+    "prettier": "^2.7.1",
+    "tailwindcss": "^3.1.6"
   }
 }
