@@ -33,12 +33,11 @@ hr {
 }
 
 p {
-    color: #484848;
-    @apply my-1.5 leading-6;
+    @apply my-1.5 leading-6 text-slate-500;
 }
 
 em {
-    @apply text-slate-400;
+    @apply text-slate-900 font-extrabold;
 }
 
 ul {
@@ -47,4 +46,5 @@ ul {
 
 li {
     line-height: 1.5;
+    @apply text-slate-500;
 }
