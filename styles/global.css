@@ -8,8 +8,8 @@
     font-family: Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, 'Helvetica Neue', 'Segoe UI', 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', sans-serif;
 }
 
-main {
-    @apply container px-8 lg:mx-auto lg:px-0;
+body {
+    @apply bg-sky-50;
 }
 
 h1 {
@@ -25,7 +25,7 @@ h3 {
 }
 
 a {
-    @apply text-sky-400;
+    @apply text-red-400 underline;
 }
 
 hr {
@@ -43,4 +43,8 @@ em {
 
 ul {
     @apply list-disc list-inside;
+}
+
+li {
+    line-height: 1.5;
 }
