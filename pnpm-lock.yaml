@@ -3,7 +3,7 @@ lockfileVersion: 5.4
 specifiers:
   '@mdx-js/loader': ^2.1.5
   '@mdx-js/react': ^2.1.5
-  '@netlify/plugin-nextjs': ^4.28.4
+  '@netlify/plugin-nextjs': ^4.28.5
   '@next/mdx': ^9.5.5
   autoprefixer: ^10.4.13
   eslint: ^8.27.0
@@ -24,7 +24,7 @@ dependencies:
   react-dom: 18.2.0_react@18.2.0
 
 devDependencies:
-  '@netlify/plugin-nextjs': 4.28.4
+  '@netlify/plugin-nextjs': 4.28.5
   autoprefixer: 10.4.13_postcss@8.4.18
   eslint: 8.27.0
   eslint-config-next: 13.0.2_rmayb2veg2btbq6mbmnyivgasy
@@ -408,8 +408,8 @@ packages:
       - utf-8-validate
     dev: true
 
-  /@netlify/plugin-nextjs/4.28.4:
-    resolution: {integrity: sha512-LROz2k2xJvieqZFUmx2tCCnh0gry0NA1i8isSTZCILIId86zelt7B9mtvr5rnBAdEq09b9Ak2f+p59g7pDSrOw==}
+  /@netlify/plugin-nextjs/4.28.5:
+    resolution: {integrity: sha512-gLcqSA4ZGKVxHhRugfc8NZXlergN6PkGLBVMUX1c6Nwpr+yWejYUudWjns3KM9xVYSUeQ5DBDK+ObkCb0ZlwCw==}
     engines: {node: '>=12.0.0'}
     dependencies:
       '@netlify/esbuild': 0.14.39
@@ -624,13 +624,13 @@ packages:
     resolution: {integrity: sha512-9K4zoImiZc3HlIp6AVUDE4CWYx22a+lhSZMYNpbjW04+YF0KWj4pJXnEMjdnFTiQibFFmElcsasJXDbdI/EPhA==}
     dependencies:
       '@types/eslint': 8.4.10
-      '@types/estree': 0.0.51
+      '@types/estree': 1.0.0
     dev: false
 
   /@types/eslint/8.4.10:
     resolution: {integrity: sha512-Sl/HOqN8NKPmhWo2VBEPm0nvHnu2LL3v9vKo8MEq0EtbJ4eVzGPl41VNPvn5E1i5poMk4/XD8UriLHpJvEP/Nw==}
     dependencies:
-      '@types/estree': 0.0.51
+      '@types/estree': 1.0.0
       '@types/json-schema': 7.0.11
     dev: false
 
