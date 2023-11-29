@@ -48,7 +48,7 @@ a {
 
 li a,
 p a {
-  @apply px-2 py-1;
+  @apply px-2 py-1 font-bold;
   background-color: #c2e7ff;
   border-radius: 16px;
 }
