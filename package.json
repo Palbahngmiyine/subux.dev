@@ -2,7 +2,7 @@
   "name": "subux.dev",
   "description": "A homepage that Introduce about subin",
   "engines": {
-    "node": ">=15.0.0"
+    "node": ">=18.0.0"
   },
   "private": true,
   "trustedDependencies": [
