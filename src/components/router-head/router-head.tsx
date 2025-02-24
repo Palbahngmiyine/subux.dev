@@ -91,7 +91,6 @@ export const RouterHead = component$(() => {
         content="/favicons/ms-icon-144x144.png"
       />
       <meta name="theme-color" content="#7fcfff" />
-      <link href="/src/global.css" rel="stylesheet" />
 
       {head.meta.map((m) => (
         <meta key={m.key} {...m} />
