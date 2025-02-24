@@ -85,12 +85,13 @@ export const RouterHead = component$(() => {
         href="/favicons/favicon-16x16.png"
       />
       <link rel="manifest" href="/manifest.json" />
-      <meta name="msapplication-TileColor" content="#ffffff" />
+      <meta name="msapplication-TileColor" content="#7fcfff" />
       <meta
         name="msapplication-TileImage"
         content="/favicons/ms-icon-144x144.png"
       />
-      <meta name="theme-color" content="#ffffff" />
+      <meta name="theme-color" content="#7fcfff" />
+      <link href="/src/global.css" rel="stylesheet" />
 
       {head.meta.map((m) => (
         <meta key={m.key} {...m} />
