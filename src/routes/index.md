@@ -5,8 +5,8 @@ description: About Subin
 
 # Hello there!
 
-Hi I'm Subin Lee.<br />
-I believe that technology helps people can focus on valuable things.<br />
+Hi I'm Subin Lee.
+I believe that technology helps people can focus on valuable things.  
 In particular, I believe that technology exists for people, not that people exist for technology.
 
 ## Websites
@@ -35,7 +35,7 @@ _Signal/Administrative Private_
 
 _Customer Engineer/DX Engineer_
 
-### Nurigo Inc 2021.07.12 ~ 2022.12.31 <br/><br/>
+### Nurigo Inc 2021.07.12 ~ 2022.12.31   
 
 - I focused on Customer Services and [SDKs](https://github.com/solapi) for
   developers at Nurigo
@@ -51,7 +51,7 @@ _Customer Engineer/DX Engineer_
 
 _Full Stack Programmer / Back End Engineer_
 
-### Passion Oil Inc 2021.02.15 ~ 2021.07.09 <br /><br />
+### Passion Oil Inc 2021.02.15 ~ 2021.07.09     
 
 - I developed BlackSwan back office system and Managed Creator Club back
   office systems
@@ -60,16 +60,16 @@ _Full Stack Programmer / Back End Engineer_
 
 _Product Manager / Front End Engineer_
 
-### Rowan Inc, 2020.04.01 ~ 2021.02.10 <br /><br />
+### Rowan Inc, 2020.04.01 ~ 2021.02.10     
 
 - Developed [Kalisco homepage](https://kalisco.co.kr) and Managed entire
   kalisco homepage project - Developed Agora project
 
 ---
 
-_Full Stack Programmer_<br />
+_Full Stack Programmer_  
 
-### Travolution Inc, 2016.09.26 ~ 2019.06.14 <br /><br />
+### Travolution Inc, 2016.09.26 ~ 2019.06.14     
 
 - Designed Database Architecture and Developed(as Front-End, Back-End)
   [Seoul PASS](https://www.seoultravelpass.com) and Bank of Trip Services.
@@ -77,7 +77,7 @@ _Full Stack Programmer_<br />
   taken action that The traffic distribute by switching from an existing EC2
 - Local DB system to an Elastic Beanstalk - RDS system. - I adapted MVC Pattern
   using Laravel Framework on Back-End Systems. - I adapted Bundler(Webpack) on
-  Renewal Seoul PASS Front-End Service.<br /><br />
+  Renewal Seoul PASS Front-End Service.    
 
 ## Blog
 
