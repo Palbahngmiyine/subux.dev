@@ -21,7 +21,7 @@
 }
 
 body {
-  background-color: white;
+  @apply bg-slate-100;
 }
 
 h1 {

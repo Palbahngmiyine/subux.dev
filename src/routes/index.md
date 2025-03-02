@@ -5,8 +5,7 @@ description: About Subin
 
 # Hello there!
 
-Hi I'm Subin Lee.
-I believe that technology helps people can focus on valuable things.  
+I'm *Subin Lee*, I believe that technology helps people can focus on valuable things.  
 In particular, I believe that technology exists for people, not that people exist for technology.
 
 ## Websites
