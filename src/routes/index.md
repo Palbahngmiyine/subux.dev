@@ -62,7 +62,8 @@ _Product Manager / Front End Engineer_
 ### Rowan Inc, 2020.04.01 ~ 2021.02.10     
 
 - Developed [Kalisco homepage](https://kalisco.co.kr) and Managed entire
-  kalisco homepage project - Developed Agora project
+  kalisco homepage project
+- Developed Agora project
 
 ---
 
