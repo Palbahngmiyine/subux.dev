@@ -72,7 +72,7 @@ _Full Stack Programmer_
 ### Travolution Inc, 2016.09.26 ~ 2019.06.14     
 
 - Designed Database Architecture and Developed(as Front-End, Back-End)
-  [Seoul PASS](https://www.seoultravelpass.com) and Bank of Trip Services.
+  [Seoul&nbsp;PASS](https://www.seoultravelpass.com) and Bank of Trip Services.
 - I've
   taken action that The traffic distribute by switching from an existing EC2
 - Local DB system to an Elastic Beanstalk - RDS system. - I adapted MVC Pattern
