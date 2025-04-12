@@ -40,8 +40,7 @@ h3 {
 }
 
 a {
-  color: #1f1f1f;
-  white-space: pre-wrap;
+  color: #1f1f1f;  
 }
 
 li a,
@@ -64,8 +63,7 @@ hr {
 
 p {
   @apply my-1.5 leading-6;
-  color: #1f1f1f;
-  white-space: pre-wrap;
+  color: #1f1f1f;  
 }
 
 em {
@@ -79,6 +77,5 @@ ul {
 
 li {
   line-height: 1.75;
-  color: #1f1f1f;
-  white-space: pre-wrap;
+  color: #1f1f1f;  
 }
