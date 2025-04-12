@@ -48,14 +48,14 @@ p a {
   @apply px-2 py-1 font-bold;
   background-color: #c2e7ff;
   border-radius: 16px;
+  white-space: pre-wrap;
 }
 
 li a:hover,
 p a:hover {
   @apply transition-colors;
   background-color: #7fcfff;
-  color: black;
-  white-space: pre-wrap;
+  color: black;  
 }
 
 hr {
