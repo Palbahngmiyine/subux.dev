@@ -55,6 +55,7 @@ p a:hover {
   @apply transition-colors;
   background-color: #7fcfff;
   color: black;
+  white-space: pre-wrap;
 }
 
 hr {
