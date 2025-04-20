@@ -26,7 +26,7 @@ _DevOps, DX Engineer_
 Spearheaded the transition of SOLAPI's infrastructure to a fully codified environment using Terraform, significantly improving infrastructure reliability, scalability, and maintainability.
 
 **Published and Enhanced the SOLAPI Python SDK**  
-Refactored and released the SOLAPI Python SDK to be fully compatible with PyPI, enabling seamless installation via `pip` and improving developer onboarding and integration experience.
+Refactored and released the [SOLAPI Python SDK](https://pypi.org/project/solapi/) to be fully compatible with PyPI, enabling seamless installation via `pip` and improving developer onboarding and integration experience.
 
 ---
 
