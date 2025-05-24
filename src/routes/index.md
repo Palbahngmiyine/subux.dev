@@ -13,6 +13,7 @@ In particular, I believe that technology exists for people, not that people exis
 ---
 
 [Github](https://github.com/Palbahngmiyine)
+[LinkedIn](https://www.linkedin.com/in/subin-lee-50875b128)
 
 ## Careers
 
