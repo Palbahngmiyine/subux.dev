@@ -1,38 +1,89 @@
 import { component$ } from "@builder.io/qwik";
-import type { DocumentHead } from "@builder.io/qwik-city";
+import { routeLoader$, Link } from "@builder.io/qwik-city";
+import { readdirSync, readFileSync } from "fs";
+import { join } from "path";
+import matter from "gray-matter";
 
-export default component$(() => {
-    return (
-        <div class="min-h-screen flex items-center justify-center">
-            <div class="text-center p-8">
-                <div class="mb-8">
-                    <div class="text-6xl mb-4">🚧</div>
-                    <h1 class="text-4xl font-bold text-gray-800 mb-4">
-                        Articles
-                    </h1>
-                    <p class="text-xl text-gray-600 mb-6">
-                        This page is under construction.
-                    </p>
-                    <p class="text-gray-500">
-                        Soon you will be able to find new articles here!
-                    </p>
-                </div>
-                <div class="animate-bounce">
-                    <div class="w-16 h-16 mx-auto bg-yellow-400 rounded-full flex items-center justify-center">
-                        <span class="text-2xl">⚒️</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    );
+export const useArticlesList = routeLoader$(async () => {
+    try {
+        const contentDir = join(process.cwd(), 'src/routes/articles/content');
+        const allFiles = readdirSync(contentDir);
+
+        const files = allFiles.filter(file =>
+            file.endsWith('.md') || file.endsWith('.mdx')
+        );
+
+        const articles = files.map(file => {
+            const filePath = join(contentDir, file);
+
+            try {
+                const fileContent = readFileSync(filePath, 'utf-8');
+
+                // 프론트매터 파싱
+                const parsed = matter(fileContent);
+                const slug = file.replace(/\.(md|mdx)$/, '');
+
+                const frontmatter = parsed.data;
+
+                const article = {
+                    slug,
+                    title: frontmatter?.title || slug,
+                    description: frontmatter?.description || '',
+                    filename: file
+                };
+
+                return article;
+            } catch (error) {
+                console.error('Error processing file:', file, error);
+                return null;
+            }
+        }).filter((article): article is NonNullable<typeof article> => article !== null);
+
+        return articles;
+    } catch (error) {
+        console.error('Error reading articles:', error);
+        return [];
+    }
 });
 
-export const head: DocumentHead = {
-    title: "Articles - Under construction",
-    meta: [
-        {
-            name: "description",
-            content: "Articles page is under construction.",
-        },
-    ],
-}; 
+export default component$(() => {
+    const articles = useArticlesList();
+
+    return (
+        <div class="max-w-4xl mx-auto px-4 py-8">
+            <h1 class="text-4xl font-bold mb-8">Articles</h1>
+
+            {articles.value.length === 0 ? (
+                <div class="text-center p-8">
+                    <div class="mb-8">
+                        <div class="text-6xl mb-4">📝</div>
+                        <h2 class="text-2xl font-bold text-gray-800 mb-4">
+                            No articles yet
+                        </h2>
+                        <p class="text-gray-600">
+                            Add some markdown files to the content folder to get started!
+                        </p>
+                    </div>
+                </div>
+            ) : (
+                <div class="space-y-6">
+                    {articles.value.map((article) => (
+                        <Link href={`/articles/${article.slug}`} class="no-underline">
+                            <article key={article.slug} class="bg-white cursor-pointer border border-gray-200 rounded-lg p-6 hover:shadow-md transition-shadow mb-4">
+                                <h2 class="text-2xl font-bold text-gray-900 mb-2 hover:text-blue-600 transition-colors">
+                                    {article.title}
+                                </h2>
+                                {article.description && (
+                                    <p class="text-gray-600 mb-4">{article.description}</p>
+                                )}
+                                <div class="inline-flex items-center text-blue-600 font-medium">
+                                    Read more →
+                                </div>
+                            </article>
+                        </Link>
+                    ))}
+                </div>
+            )}
+        </div>
+    );
+}); 
