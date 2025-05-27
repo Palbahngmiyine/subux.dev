@@ -24,11 +24,12 @@ export const useArticlesList = routeLoader$(async () => {
                 const slug = file.replace(/\.(md|mdx)$/, '');
 
                 const frontmatter = parsed.data;
+                console.log('Frontmatter:', frontmatter);
 
                 const article = {
                     slug,
-                    title: frontmatter?.title || slug,
-                    description: frontmatter?.description || '',
+                    title: frontmatter.title || slug,
+                    description: frontmatter.description || '',
                     filename: file
                 };
 
@@ -68,8 +69,8 @@ export default component$(() => {
             ) : (
                 <div class="space-y-6">
                     {articles.value.map((article) => (
-                        <Link href={`/articles/${article.slug}`} class="no-underline">
-                            <article key={article.slug} class="bg-white cursor-pointer border border-gray-200 rounded-lg p-6 hover:shadow-md transition-shadow mb-4">
+                        <Link key={article.slug} href={`/articles/${article.slug}`} class="no-underline">
+                            <article class="bg-white cursor-pointer border border-gray-200 rounded-lg p-6 hover:shadow-md transition-shadow mb-4">
                                 <h2 class="text-2xl font-bold text-gray-900 mb-2 hover:text-blue-600 transition-colors">
                                     {article.title}
                                 </h2>

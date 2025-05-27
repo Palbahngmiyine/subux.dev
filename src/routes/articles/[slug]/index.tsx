@@ -1,5 +1,5 @@
 import { component$ } from "@builder.io/qwik";
-import { routeLoader$, useLocation } from "@builder.io/qwik-city";
+import { routeLoader$ } from "@builder.io/qwik-city";
 import { readFileSync, existsSync } from "fs";
 import { join, resolve } from "path";
 import { unified } from "unified";
@@ -18,7 +18,6 @@ export const useArticleData = routeLoader$(async ({ params, status }) => {
     try {
         // 마크다운 파일 경로 (MD 파일 우선, MDX 파일도 지원)
         const contentDir = resolve(process.cwd(), 'src/routes/articles/content');
-        let filePath: string;
         let fileContent: string;
 
         // .md 파일을 먼저 찾고, 없으면 .mdx 파일을 찾음
@@ -26,7 +25,6 @@ export const useArticleData = routeLoader$(async ({ params, status }) => {
 
         if (existsSync(mdPath)) {
             fileContent = readFileSync(mdPath, 'utf-8');
-            filePath = mdPath;
         } else {
             status(404);
             throw new Error(`Article not found: ${slug}`);
@@ -53,9 +51,9 @@ export const useArticleData = routeLoader$(async ({ params, status }) => {
         return {
             content: result.toString(),
             frontmatter: parsed.data,
-            title: parsed.data?.title || slug
+            title: parsed.data.title || slug
         };
-    } catch (error) {
+    } catch {
         // 파일이 없으면 404
         status(404);
         throw new Error(`Article not found: ${slug}`);
@@ -64,7 +62,6 @@ export const useArticleData = routeLoader$(async ({ params, status }) => {
 
 export default component$(() => {
     const articleData = useArticleData();
-    const loc = useLocation();
 
     return (
         <div class="max-w-4xl mx-auto px-4 py-8">

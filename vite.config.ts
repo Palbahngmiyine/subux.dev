@@ -33,6 +33,10 @@ export default defineConfig(() => {
       qwikVite(),
       tsconfigPaths(),
     ],
+    ssr: {
+      external: ["fs", "path", "gray-matter", "unified", "remark-parse", "remark-gfm", "remark-directive", "remark-wiki-link", "remark-obsidian-callout", "remark-rehype", "rehype-stringify"],
+      noExternal: []
+    },
     server: {
       headers: {
         "Cache-Control": "public, max-age=0",
@@ -42,6 +46,9 @@ export default defineConfig(() => {
       headers: {
         "Cache-Control": "public, max-age=600",
       },
+    },
+    define: {
+      global: "globalThis",
     },
   };
 });
