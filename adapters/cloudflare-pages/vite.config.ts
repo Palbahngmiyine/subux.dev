@@ -8,7 +8,12 @@ export default extendConfig(baseConfig, () => {
       ssr: true,
       rollupOptions: {
         input: ["src/entry.cloudflare-pages.tsx", "@qwik-city-plan"],
+        external: ["fs", "path", "gray-matter", "unified", "remark-parse", "remark-gfm", "remark-directive", "remark-wiki-link", "remark-obsidian-callout", "remark-rehype", "rehype-stringify"]
       },
+    },
+    ssr: {
+      external: ["fs", "path", "gray-matter", "unified", "remark-parse", "remark-gfm", "remark-directive", "remark-wiki-link", "remark-obsidian-callout", "remark-rehype", "rehype-stringify"],
+      noExternal: []
     },
     plugins: [cloudflarePagesAdapter()],
   };
