@@ -117,3 +117,276 @@ li {
   background: none !important;
   color: inherit !important;
 }
+
+/* Obsidian-flavored Markdown styles */
+
+
+
+/* Obsidian Callouts */
+.callout {
+  @apply border-l-4 p-4 my-4 rounded-r-lg;
+  border-left-width: 4px;
+}
+
+.callout-note {
+  @apply bg-blue-50 border-blue-500;
+}
+
+.callout-note .callout-title {
+  @apply text-blue-800 font-semibold mb-2;
+}
+
+.callout-note .callout-title::before {
+  content: "📝 ";
+}
+
+.callout-tip {
+  @apply bg-green-50 border-green-500;
+}
+
+.callout-tip .callout-title {
+  @apply text-green-800 font-semibold mb-2;
+}
+
+.callout-tip .callout-title::before {
+  content: "💡 ";
+}
+
+.callout-important {
+  @apply bg-purple-50 border-purple-500;
+}
+
+.callout-important .callout-title {
+  @apply text-purple-800 font-semibold mb-2;
+}
+
+.callout-important .callout-title::before {
+  content: "❗ ";
+}
+
+.callout-warning {
+  @apply bg-yellow-50 border-yellow-500;
+}
+
+.callout-warning .callout-title {
+  @apply text-yellow-800 font-semibold mb-2;
+}
+
+.callout-warning .callout-title::before {
+  content: "⚠️ ";
+}
+
+.callout-caution {
+  @apply bg-red-50 border-red-500;
+}
+
+.callout-caution .callout-title {
+  @apply text-red-800 font-semibold mb-2;
+}
+
+.callout-caution .callout-title::before {
+  content: "🔥 ";
+}
+
+.callout-abstract,
+.callout-summary,
+.callout-tldr {
+  @apply bg-cyan-50 border-cyan-500;
+}
+
+.callout-abstract .callout-title,
+.callout-summary .callout-title,
+.callout-tldr .callout-title {
+  @apply text-cyan-800 font-semibold mb-2;
+}
+
+.callout-abstract .callout-title::before,
+.callout-summary .callout-title::before,
+.callout-tldr .callout-title::before {
+  content: "📄 ";
+}
+
+.callout-info {
+  @apply bg-indigo-50 border-indigo-500;
+}
+
+.callout-info .callout-title {
+  @apply text-indigo-800 font-semibold mb-2;
+}
+
+.callout-info .callout-title::before {
+  content: "ℹ️ ";
+}
+
+.callout-todo {
+  @apply bg-orange-50 border-orange-500;
+}
+
+.callout-todo .callout-title {
+  @apply text-orange-800 font-semibold mb-2;
+}
+
+.callout-todo .callout-title::before {
+  content: "✅ ";
+}
+
+.callout-hint {
+  @apply bg-teal-50 border-teal-500;
+}
+
+.callout-hint .callout-title {
+  @apply text-teal-800 font-semibold mb-2;
+}
+
+.callout-hint .callout-title::before {
+  content: "🔍 ";
+}
+
+.callout-success {
+  @apply bg-emerald-50 border-emerald-500;
+}
+
+.callout-success .callout-title {
+  @apply text-emerald-800 font-semibold mb-2;
+}
+
+.callout-success .callout-title::before {
+  content: "✅ ";
+}
+
+.callout-question {
+  @apply bg-violet-50 border-violet-500;
+}
+
+.callout-question .callout-title {
+  @apply text-violet-800 font-semibold mb-2;
+}
+
+.callout-question .callout-title::before {
+  content: "❓ ";
+}
+
+.callout-failure,
+.callout-fail,
+.callout-missing {
+  @apply bg-rose-50 border-rose-500;
+}
+
+.callout-failure .callout-title,
+.callout-fail .callout-title,
+.callout-missing .callout-title {
+  @apply text-rose-800 font-semibold mb-2;
+}
+
+.callout-failure .callout-title::before,
+.callout-fail .callout-title::before,
+.callout-missing .callout-title::before {
+  content: "❌ ";
+}
+
+.callout-danger,
+.callout-error {
+  @apply bg-red-50 border-red-500;
+}
+
+.callout-danger .callout-title,
+.callout-error .callout-title {
+  @apply text-red-800 font-semibold mb-2;
+}
+
+.callout-danger .callout-title::before,
+.callout-error .callout-title::before {
+  content: "⚡ ";
+}
+
+.callout-bug {
+  @apply bg-pink-50 border-pink-500;
+}
+
+.callout-bug .callout-title {
+  @apply text-pink-800 font-semibold mb-2;
+}
+
+.callout-bug .callout-title::before {
+  content: "🐛 ";
+}
+
+.callout-example {
+  @apply bg-stone-50 border-stone-500;
+}
+
+.callout-example .callout-title {
+  @apply text-stone-800 font-semibold mb-2;
+}
+
+.callout-example .callout-title::before {
+  content: "📋 ";
+}
+
+.callout-quote,
+.callout-cite {
+  @apply bg-gray-50 border-gray-500;
+}
+
+.callout-quote .callout-title,
+.callout-cite .callout-title {
+  @apply text-gray-800 font-semibold mb-2;
+}
+
+.callout-quote .callout-title::before,
+.callout-cite .callout-title::before {
+  content: "💬 ";
+}
+
+/* GFM Table styles */
+table {
+  @apply w-full border-collapse border border-gray-300 my-4;
+}
+
+th {
+  @apply bg-gray-100 border border-gray-300 px-4 py-2 font-semibold text-left;
+}
+
+td {
+  @apply border border-gray-300 px-4 py-2;
+}
+
+/* GFM Task list styles */
+input[type="checkbox"] {
+  @apply mr-2;
+}
+
+/* Strikethrough text */
+del {
+  @apply line-through text-gray-500;
+}
+
+/* Code blocks with syntax highlighting support */
+pre {
+  @apply bg-gray-100 p-4 rounded-lg overflow-x-auto my-4;
+}
+
+code {
+  @apply bg-gray-100 px-2 py-1 rounded text-sm font-mono;
+}
+
+pre code {
+  @apply bg-transparent p-0;
+}
+
+/* Footnotes */
+.footnotes {
+  @apply mt-8 pt-4 border-t border-gray-300;
+}
+
+.footnotes ol {
+  @apply text-sm;
+}
+
+sup a {
+  @apply text-blue-600 no-underline;
+}
+
+sup a:hover {
+  @apply text-blue-800 underline;
+}

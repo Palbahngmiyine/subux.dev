@@ -21,7 +21,7 @@ export const Navigation = component$(() => {
     return (
         <nav class="mb-8">
             <div class="w-full max-w-md">
-                <div class="inline-flex h-10 items-center justify-center rounded-md bg-slate-100 p-1 text-slate-500 border border-slate-200 grid grid-cols-3 w-full">
+                <div class="h-10 items-center justify-center rounded-md bg-slate-100 p-1 text-slate-500 border border-slate-200 grid grid-cols-3 w-full">
                     {navItems.map((item) => (
                         <Link
                             key={item.value}
