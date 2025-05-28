@@ -1,7 +1,7 @@
 import { component$ } from "@builder.io/qwik";
 import { routeLoader$, Link } from "@builder.io/qwik-city";
-import { readdirSync, readFileSync } from "fs";
-import { join } from "path";
+import { readdirSync, readFileSync } from "node:fs";
+import { join } from "node:path";
 import matter from "gray-matter";
 
 export const useArticlesList = routeLoader$(async () => {
