@@ -34,7 +34,7 @@ export default defineConfig(() => {
       tsconfigPaths(),
     ],
     ssr: {
-      external: ["fs", "path", "gray-matter", "unified", "remark-parse", "remark-gfm", "remark-directive", "remark-wiki-link", "remark-obsidian-callout", "remark-rehype", "rehype-stringify"],
+      external: ["node: fs", "node:path", "gray-matter", "unified", "remark-parse", "remark-gfm", "remark-directive", "remark-wiki-link", "remark-obsidian-callout", "remark-rehype", "rehype-stringify"],
       noExternal: []
     },
     server: {

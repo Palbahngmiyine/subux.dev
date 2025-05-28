@@ -1,6 +1,6 @@
 import { component$ } from "@builder.io/qwik";
 import { routeLoader$ } from "@builder.io/qwik-city";
-import { readFileSync, existsSync } from "fs";
+import { readFileSync, existsSync } from "node:fs";
 import { join, resolve } from "path";
 import { unified } from "unified";
 import remarkParse from "remark-parse";
