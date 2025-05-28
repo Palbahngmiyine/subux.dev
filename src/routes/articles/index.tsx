@@ -62,7 +62,7 @@ export default component$(() => {
                             No articles yet
                         </h2>
                         <p class="text-gray-600">
-                            Add some markdown files to the content folder to get started!
+                            Will be updated soon...
                         </p>
                     </div>
                 </div>
