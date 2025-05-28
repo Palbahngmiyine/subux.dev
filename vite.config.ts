@@ -33,8 +33,14 @@ export default defineConfig(() => {
       qwikVite(),
       tsconfigPaths(),
     ],
+    resolve: {
+      alias: {
+        'path': 'node:path',
+        'fs': 'node:fs'
+      }
+    },
     ssr: {
-      external: ["node: fs", "node:path", "gray-matter", "unified", "remark-parse", "remark-gfm", "remark-directive", "remark-wiki-link", "remark-obsidian-callout", "remark-rehype", "rehype-stringify"],
+      external: ["node:fs", "node:path", "gray-matter", "unified", "remark-parse", "remark-gfm", "remark-directive", "remark-wiki-link", "remark-obsidian-callout", "remark-rehype", "rehype-stringify"],
       noExternal: []
     },
     server: {
