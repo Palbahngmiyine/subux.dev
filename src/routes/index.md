@@ -82,12 +82,4 @@ _Full Stack Programmer_
   taken action that The traffic distribute by switching from an existing EC2
 - Local DB system to an Elastic Beanstalk - RDS system. - I adapted MVC Pattern
   using Laravel Framework on Back-End Systems. - I adapted Bundler(Webpack) on
-  Renewal Seoul PASS Front-End Service.    
-
-## Blog
-
----
-
-**You can check(will update!) my korean blog below.**
-
-[Go to my Korean blog](https://blog.subux.dev)
+  Renewal Seoul PASS Front-End Service.
