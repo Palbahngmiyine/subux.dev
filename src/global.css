@@ -43,6 +43,18 @@ a {
   color: #1f1f1f;
 }
 
+.default-link {
+  @apply px-2 py-1 font-bold;
+  background-color: #c2e7ff;
+  border-radius: 16px;
+}
+
+.default-link:hover {
+  @apply transition-colors;
+  background-color: #7fcfff;
+  color: black;
+}
+
 li a,
 p a {
   @apply px-2 py-1 font-bold;
