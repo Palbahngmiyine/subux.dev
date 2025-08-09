@@ -1,14 +1,10 @@
 import { component$ } from '@builder.io/qwik'
 import { Link, routeLoader$ } from '@builder.io/qwik-city'
 import matter from 'gray-matter'
-import { readFileSync, readdirSync } from 'node:fs'
-import { join } from 'node:path'
 import { formatFrontmatterDate } from '~/lib/date'
 
 export const useArticlesList = routeLoader$(async () => {
   try {
-    const contentDir = join(process.cwd(), 'src/articles')
-
     type Article = {
       slug: string
       title: string
@@ -24,89 +20,50 @@ export const useArticlesList = routeLoader$(async () => {
       'index.mdx',
     ]
 
-    const readArticleFromFile = (
-      absolutePath: string,
-      slug: string,
-      filename: string,
-    ): Article | null => {
+    const modules = import.meta.glob('../articles/**/*.{md,mdx}', {
+      query: '?raw',
+      import: 'default',
+      eager: true,
+    }) as Record<string, string>
+
+    const computeSlugAndFilename = (
+      key: string,
+    ): { slug: string; filename: string } => {
+      const normalized = key.replace(/\\/g, '/')
+      const afterArticles = normalized.split('articles/').pop() || normalized
+      const filename = afterArticles
+      const withoutExt = afterArticles.replace(/\.(md|mdx)$/i, '')
+
+      // Handle index candidates -> slug is directory path
+      if (INDEX_CANDIDATES.some((name) => afterArticles.endsWith(`/${name}`))) {
+        const dir = afterArticles.split('/').slice(0, -1).join('/')
+        return { slug: dir, filename }
+      }
+
+      return { slug: withoutExt, filename }
+    }
+
+    const articles: Article[] = []
+    for (const [key, raw] of Object.entries(modules)) {
       try {
-        const fileContent = readFileSync(absolutePath, 'utf-8')
-        const parsed = matter(fileContent)
+        const { slug, filename } = computeSlugAndFilename(key)
+        const parsed = matter(raw)
         const frontmatter = parsed.data as Record<string, unknown>
-        return {
+        articles.push({
           slug,
           title: (frontmatter.title as string) || slug,
           description: (frontmatter.description as string) || '',
           filename,
           date: formatFrontmatterDate(frontmatter.date),
-        }
+        })
       } catch (error) {
-        console.error('Error processing file:', filename, error)
-        return null
+        console.error('Error processing file:', key, error)
       }
     }
 
-    const MAX_DEPTH = 2 // e.g. src/articles/2025/test/index.md
-
-    const collectArticlesFromDir = (
-      dirAbsolutePath: string,
-      slugParts: string[],
-      depth: number,
-    ): Article[] => {
-      const entries = readdirSync(dirAbsolutePath, { withFileTypes: true })
-      const articles: Article[] = []
-
-      // Include loose files (*.md, *.mdx) at any depth (excluding index candidates)
-      for (const entry of entries) {
-        if (
-          entry.isFile() &&
-          (entry.name.endsWith('.md') || entry.name.endsWith('.mdx'))
-        ) {
-          if (INDEX_CANDIDATES.includes(entry.name)) continue
-          const filePath = join(dirAbsolutePath, entry.name)
-          const baseSlug = entry.name.replace(/\.(md|mdx)$/i, '')
-          const slug = [...slugParts, baseSlug].join('/')
-          const filename = [...slugParts, entry.name].join('/')
-          const article = readArticleFromFile(filePath, slug, filename)
-          if (article) articles.push(article)
-        }
-      }
-
-      // Subdirectories: look for index candidates and recurse
-      for (const entry of entries) {
-        if (!entry.isDirectory()) continue
-
-        const subDirName = entry.name
-        const nextSlugParts = [...slugParts, subDirName]
-        const subDirPath = join(dirAbsolutePath, subDirName)
-
-        const subEntries = readdirSync(subDirPath, { withFileTypes: true })
-        const subFiles = new Set(
-          subEntries.filter((e) => e.isFile()).map((e) => e.name),
-        )
-        const indexFile = INDEX_CANDIDATES.find((name) => subFiles.has(name))
-
-        if (indexFile) {
-          const slug = nextSlugParts.join('/')
-          const absoluteIndexPath = join(subDirPath, indexFile)
-          const filename = [...nextSlugParts, indexFile].join('/')
-          const article = readArticleFromFile(absoluteIndexPath, slug, filename)
-          if (article) articles.push(article)
-        }
-
-        if (depth + 1 <= MAX_DEPTH) {
-          articles.push(
-            ...collectArticlesFromDir(subDirPath, nextSlugParts, depth + 1),
-          )
-        }
-      }
-
-      return articles
-    }
-
-    return collectArticlesFromDir(contentDir, [], 0)
+    return articles
   } catch (error) {
-    console.error('Error reading articles:', error)
+    console.error('Error reading articles (bundle):', error)
     return []
   }
 })

@@ -1,8 +1,6 @@
 import { component$ } from '@builder.io/qwik'
 import { routeLoader$ } from '@builder.io/qwik-city'
 import matter from 'gray-matter'
-import { existsSync, readFileSync } from 'node:fs'
-import { join, resolve } from 'node:path'
 import rehypeStringify from 'rehype-stringify'
 import remarkDirective from 'remark-directive'
 import remarkGfm from 'remark-gfm'
@@ -39,43 +37,38 @@ export const useArticleData = routeLoader$<ArticleData>(
     }
 
     try {
-      const contentDir = resolve(process.cwd(), 'src/articles')
-      let fileContent: string | null = null
+      const indexCandidates = [
+        '@index.md',
+        '@index.mdx',
+        'index.md',
+        'index.mdx',
+      ]
 
-      // 1) 직접 파일: src/articles/<...parts>.md(x)
-      if (parts.length >= 1) {
-        const asPath = join(contentDir, ...parts)
-        const mdPath = `${asPath}.md`
-        const mdxPath = `${asPath}.mdx`
-        if (existsSync(mdPath)) {
-          fileContent = readFileSync(mdPath, 'utf-8')
-        } else if (existsSync(mdxPath)) {
-          fileContent = readFileSync(mdxPath, 'utf-8')
+      const modules = import.meta.glob('../../articles/**/*.{md,mdx}', {
+        query: '?raw',
+        import: 'default',
+        eager: true,
+      }) as Record<string, string>
+
+      const findKeyForParts = (partsArr: string[]): string | null => {
+        const directMd = `../../articles/${partsArr.join('/')}.md`
+        const directMdx = `../../articles/${partsArr.join('/')}.mdx`
+        if (modules[directMd]) return directMd
+        if (modules[directMdx]) return directMdx
+        for (const name of indexCandidates) {
+          const idx = `../../articles/${partsArr.join('/')}/${name}`
+          if (modules[idx]) return idx
         }
+        return null
       }
 
-      // 2) 디렉토리 인덱스: src/articles/<...parts>/{@index,index}.md(x)
-      if (fileContent === null && parts.length >= 1) {
-        const dirPath = join(contentDir, ...parts)
-        const indexCandidates = [
-          '@index.md',
-          '@index.mdx',
-          'index.md',
-          'index.mdx',
-        ]
-        for (const candidate of indexCandidates) {
-          const idx = join(dirPath, candidate)
-          if (existsSync(idx)) {
-            fileContent = readFileSync(idx, 'utf-8')
-            break
-          }
-        }
-      }
-
-      if (fileContent === null) {
+      const matchedKey = parts.length > 0 ? findKeyForParts(parts) : null
+      if (!matchedKey) {
         status(404)
         throw new Error(`Article not found: ${raw}`)
       }
+
+      const fileContent = modules[matchedKey]
 
       const parsed = matter(fileContent)
 
