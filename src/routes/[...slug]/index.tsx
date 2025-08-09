@@ -120,7 +120,7 @@ export default component$(() => {
         </a>
       </div>
       <article class="w-full mx-auto px-4 py-8 bg-white rounded-lg mt-4">
-        <h1 class="text-4xl font-bold">{articleData.value.title}</h1>
+        <h1 class="text-4xl font-bold break-keep">{articleData.value.title}</h1>
         {formattedDate && (
           <div class="text-gray-500 text-sm mt-2 mb-6">{formattedDate}</div>
         )}
