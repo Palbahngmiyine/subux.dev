@@ -125,7 +125,7 @@ export default component$(() => {
           <div class="text-gray-500 text-sm mt-2 mb-6">{formattedDate}</div>
         )}
         <div
-          class="prose prose-lg max-w-none"
+          class="prose prose-lg max-w-none break-keep"
           dangerouslySetInnerHTML={articleData.value.content}
         />
       </article>
