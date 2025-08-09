@@ -1,11 +1,10 @@
-import { component$, useStyles$ } from '@builder.io/qwik'
+import { component$, isDev, useStyles$ } from '@builder.io/qwik'
 import {
   QwikCityProvider,
   RouterOutlet,
   ServiceWorkerRegister,
 } from '@builder.io/qwik-city'
 import { RouterHead } from './components/router-head/router-head'
-import { isDev } from '@builder.io/qwik'
 import styles from './global.css?inline'
 
 export default component$(() => {
@@ -14,7 +13,7 @@ export default component$(() => {
   return (
     <QwikCityProvider>
       <head>
-        <meta charSet="utf-8" />
+        <meta charset="utf-8" />
         {!isDev && (
           <link
             rel="manifest"
