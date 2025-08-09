@@ -1,3 +1,3 @@
 # Subux
 
-Just about me, please see https://www.subux.dev
+Just about my thoguhts, Please see https://www.subux.dev
