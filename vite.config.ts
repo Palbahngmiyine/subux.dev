@@ -1,12 +1,12 @@
-import { defineConfig } from "vite";
-import { qwikVite } from "@builder.io/qwik/optimizer";
-import { qwikCity } from "@builder.io/qwik-city/vite";
-import tsconfigPaths from "vite-tsconfig-paths";
-import tailwindcss from "@tailwindcss/vite";
-import remarkWikiLink from "remark-wiki-link";
-import remarkObsidianCallout from "remark-obsidian-callout";
-import remarkGfm from "remark-gfm";
-import remarkDirective from "remark-directive";
+import { defineConfig } from 'vite'
+import { qwikVite } from '@builder.io/qwik/optimizer'
+import { qwikCity } from '@builder.io/qwik-city/vite'
+import tsconfigPaths from 'vite-tsconfig-paths'
+import tailwindcss from '@tailwindcss/vite'
+import remarkWikiLink from 'remark-wiki-link'
+import remarkObsidianCallout from 'remark-obsidian-callout'
+import remarkGfm from 'remark-gfm'
+import remarkDirective from 'remark-directive'
 
 export default defineConfig(() => {
   return {
@@ -20,9 +20,11 @@ export default defineConfig(() => {
             [
               remarkWikiLink,
               {
-                pageResolver: (name: string) => [name.replace(/ /g, "-").toLowerCase()],
-                hrefTemplate: (permalink: string) => `/articles/${permalink}`,
-                aliasDivider: "|",
+                pageResolver: (name: string) => [
+                  name.replace(/ /g, '-').toLowerCase(),
+                ],
+                hrefTemplate: (permalink: string) => `/${permalink}`,
+                aliasDivider: '|',
               },
             ],
             remarkObsidianCallout,
@@ -34,21 +36,33 @@ export default defineConfig(() => {
       tsconfigPaths(),
     ],
     ssr: {
-      external: ["node:fs", "node:path", "gray-matter", "unified", "remark-parse", "remark-gfm", "remark-directive", "remark-wiki-link", "remark-obsidian-callout", "remark-rehype", "rehype-stringify"],
-      noExternal: []
+      external: [
+        'node:fs',
+        'node:path',
+        'gray-matter',
+        'unified',
+        'remark-parse',
+        'remark-gfm',
+        'remark-directive',
+        'remark-wiki-link',
+        'remark-obsidian-callout',
+        'remark-rehype',
+        'rehype-stringify',
+      ],
+      noExternal: [],
     },
     server: {
       headers: {
-        "Cache-Control": "public, max-age=0",
+        'Cache-Control': 'public, max-age=0',
       },
     },
     preview: {
       headers: {
-        "Cache-Control": "public, max-age=600",
+        'Cache-Control': 'public, max-age=600',
       },
     },
     define: {
-      global: "globalThis",
+      global: 'globalThis',
     },
-  };
-});
+  }
+})

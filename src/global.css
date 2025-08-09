@@ -120,8 +120,6 @@ li {
 
 /* Obsidian-flavored Markdown styles */
 
-
-
 /* Obsidian Callouts */
 .callout {
   @apply border-l-4 p-4 my-4 rounded-r-lg;
