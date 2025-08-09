@@ -119,7 +119,7 @@ export default component$(() => {
   const formattedDate = formatFrontmatterDate(fm.date)
 
   return (
-    <section class="w-full mx-auto px-4 py-8">
+    <section class="max-w-2xl mx-auto px-4 py-8">
       <div>
         <a href="/" class="default-link">
           <b>←</b> Back to Home

@@ -128,7 +128,7 @@ export default component$(() => {
           </div>
         </div>
       ) : (
-        <div class="space-y-6">
+        <div class="max-w-2xl mx-auto space-y-6">
           {articles.value.map((article) => (
             <Link
               key={article.slug}

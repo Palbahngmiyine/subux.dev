@@ -74,7 +74,7 @@ hr {
 }
 
 p {
-  @apply my-1.5 leading-6;
+  @apply my-6 leading-6;
   color: #1f1f1f;
 }
 
