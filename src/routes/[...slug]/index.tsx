@@ -1,4 +1,5 @@
 import { component$ } from '@builder.io/qwik'
+import type { DocumentHead } from '@builder.io/qwik-city'
 import { routeLoader$ } from '@builder.io/qwik-city'
 import matter from 'gray-matter'
 import rehypeStringify from 'rehype-stringify'
@@ -131,3 +132,13 @@ export default component$(() => {
     </section>
   )
 })
+
+export const head: DocumentHead = ({ resolveValue }) => {
+  const article = resolveValue(useArticleData)
+  const fm = article?.frontmatter as Record<string, unknown> | undefined
+  const fmTitle = typeof fm?.title === 'string' ? fm.title : ''
+
+  return {
+    title: fmTitle.trim().length > 0 ? fmTitle : 'www.subux.dev',
+  }
+}

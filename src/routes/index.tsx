@@ -1,5 +1,5 @@
 import { component$ } from '@builder.io/qwik'
-import { Link, routeLoader$ } from '@builder.io/qwik-city'
+import { type DocumentHead, Link, routeLoader$ } from '@builder.io/qwik-city'
 import matter from 'gray-matter'
 import { formatFrontmatterDate } from '~/lib/date'
 
@@ -134,3 +134,9 @@ export default component$(() => {
     </div>
   )
 })
+
+export const head: DocumentHead = () => {
+  return {
+    title: 'Just my thoughts | subux.dev',
+  }
+}
