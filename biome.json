@@ -23,8 +23,7 @@
       },
       "security": {
         "noDangerouslySetInnerHtml": "off"
-      }
-      ,
+      },
       "suspicious": {
         "noDoubleEquals": "error"
       }
