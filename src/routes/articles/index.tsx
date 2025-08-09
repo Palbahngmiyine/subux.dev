@@ -24,7 +24,7 @@ export const useArticlesList = routeLoader$(async () => {
                 const slug = file.replace(/\.(md|mdx)$/, '');
 
                 const frontmatter = parsed.data;
-                console.log('Frontmatter:', frontmatter);
+                // console.log('Frontmatter:', frontmatter);
 
                 const article = {
                     slug,
