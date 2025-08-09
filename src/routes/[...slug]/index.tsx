@@ -11,6 +11,7 @@ import remarkObsidianCallout from 'remark-obsidian-callout'
 import remarkRehype from 'remark-rehype'
 import rehypeStringify from 'rehype-stringify'
 import matter from 'gray-matter'
+import { formatFrontmatterDate } from '~/lib/date'
 
 interface ArticleData {
     content: string
@@ -107,6 +108,8 @@ export const useArticleData = routeLoader$<ArticleData>(
 
 export default component$(() => {
     const articleData = useArticleData()
+    const fm = articleData.value.frontmatter as Record<string, unknown>
+    const formattedDate = formatFrontmatterDate(fm.date)
 
     return (
         <section class="w-full mx-auto px-4 py-8">
@@ -114,7 +117,10 @@ export default component$(() => {
                 <a href="/" class="default-link"><b>←</b> Back to Home</a>
             </div>
             <article class="w-full mx-auto px-4 py-8 bg-white rounded-lg mt-4">
-                <h1 class="text-4xl font-bold mb-6">{articleData.value.title}</h1>
+                <h1 class="text-4xl font-bold">{articleData.value.title}</h1>
+                {formattedDate && (
+                    <div class="text-gray-500 text-sm mt-2 mb-6">{formattedDate}</div>
+                )}
                 <div
                     class="prose prose-lg max-w-none"
                     dangerouslySetInnerHTML={articleData.value.content}

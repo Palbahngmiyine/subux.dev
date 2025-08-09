@@ -3,6 +3,7 @@ import { routeLoader$, Link } from '@builder.io/qwik-city'
 import { readdirSync, readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import matter from 'gray-matter'
+import { formatFrontmatterDate } from '~/lib/date'
 
 export const useArticlesList = routeLoader$(async () => {
     try {
@@ -13,6 +14,7 @@ export const useArticlesList = routeLoader$(async () => {
             title: string
             description: string
             filename: string
+            date: string | null
         }
 
         const INDEX_CANDIDATES = [
@@ -36,6 +38,7 @@ export const useArticlesList = routeLoader$(async () => {
                     title: (frontmatter.title as string) || slug,
                     description: (frontmatter.description as string) || '',
                     filename,
+                    date: formatFrontmatterDate(frontmatter.date),
                 }
             } catch (error) {
                 console.error('Error processing file:', filename, error)
@@ -133,9 +136,12 @@ export default component$(() => {
                             class="no-underline"
                         >
                             <article class="bg-white cursor-pointer border border-gray-200 rounded-lg p-6 hover:shadow-md transition-shadow mb-4">
-                                <h2 class="text-2xl font-bold text-gray-900 mb-2 hover:text-blue-600 transition-colors">
+                                <h2 class="text-2xl font-bold text-gray-900 hover:text-blue-600 transition-colors">
                                     {article.title}
                                 </h2>
+                                {article.date && (
+                                    <div class="text-gray-500 text-sm mt-1 mb-2">{article.date}</div>
+                                )}
                                 {article.description && (
                                     <p class="text-gray-600 mb-4">{article.description}</p>
                                 )}
