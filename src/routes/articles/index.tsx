@@ -24,12 +24,11 @@ export const useArticlesList = routeLoader$(async () => {
                 const slug = file.replace(/\.(md|mdx)$/, '');
 
                 const frontmatter = parsed.data;
-                // console.log('Frontmatter:', frontmatter);
 
                 const article = {
                     slug,
-                    title: frontmatter.title || slug,
-                    description: frontmatter.description || '',
+                    title: frontmatter.title as string || slug,
+                    description: frontmatter.description as string || '',
                     filename: file
                 };
 
