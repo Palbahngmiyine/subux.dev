@@ -1,75 +1,146 @@
 import { component$ } from '@builder.io/qwik'
-import { type DocumentHead, Link, routeLoader$ } from '@builder.io/qwik-city'
+import {
+  type DocumentHead,
+  Link,
+  routeLoader$,
+  useLocation,
+} from '@builder.io/qwik-city'
 import matter from 'gray-matter'
+import { Tabs } from '~/components/tabs'
 import { formatFrontmatterDate } from '~/lib/date'
+
+type Article = {
+  slug: string
+  title: string
+  description: string
+  filename: string
+  date: string | null
+}
+
+const INDEX_CANDIDATES = ['@index.md', '@index.mdx', 'index.md', 'index.mdx']
+
+const computeSlugAndFilename = (
+  key: string,
+  baseFolder: string,
+): { slug: string; filename: string } => {
+  const normalized = key.replace(/\\/g, '/')
+  const afterBase = normalized.split(`${baseFolder}/`).pop() || normalized
+  const filename = afterBase
+  const withoutExt = afterBase.replace(/\.(md|mdx)$/i, '')
+
+  // Handle index candidates -> slug is directory path
+  if (INDEX_CANDIDATES.some((name) => afterBase.endsWith(`/${name}`))) {
+    const dir = afterBase.split('/').slice(0, -1).join('/')
+    return { slug: dir, filename }
+  }
+
+  return { slug: withoutExt, filename }
+}
+
+const loadArticlesFromGlob = (
+  modules: Record<string, string>,
+  baseFolder: string,
+): Article[] => {
+  const articles: Article[] = []
+  for (const [key, raw] of Object.entries(modules)) {
+    try {
+      const { slug, filename } = computeSlugAndFilename(key, baseFolder)
+      const parsed = matter(raw)
+      const frontmatter = parsed.data as Record<string, unknown>
+      articles.push({
+        slug,
+        title: (frontmatter.title as string) || slug,
+        description: (frontmatter.description as string) || '',
+        filename,
+        date: formatFrontmatterDate(frontmatter.date),
+      })
+    } catch (error) {
+      console.error('Error processing file:', key, error)
+    }
+  }
+  return articles
+}
 
 export const useArticlesList = routeLoader$(async () => {
   try {
-    type Article = {
-      slug: string
-      title: string
-      description: string
-      filename: string
-      date: string | null
-    }
-
-    const INDEX_CANDIDATES = [
-      '@index.md',
-      '@index.mdx',
-      'index.md',
-      'index.mdx',
-    ]
-
     const modules = import.meta.glob('../articles/**/*.{md,mdx}', {
       query: '?raw',
       import: 'default',
       eager: true,
     }) as Record<string, string>
 
-    const computeSlugAndFilename = (
-      key: string,
-    ): { slug: string; filename: string } => {
-      const normalized = key.replace(/\\/g, '/')
-      const afterArticles = normalized.split('articles/').pop() || normalized
-      const filename = afterArticles
-      const withoutExt = afterArticles.replace(/\.(md|mdx)$/i, '')
-
-      // Handle index candidates -> slug is directory path
-      if (INDEX_CANDIDATES.some((name) => afterArticles.endsWith(`/${name}`))) {
-        const dir = afterArticles.split('/').slice(0, -1).join('/')
-        return { slug: dir, filename }
-      }
-
-      return { slug: withoutExt, filename }
-    }
-
-    const articles: Article[] = []
-    for (const [key, raw] of Object.entries(modules)) {
-      try {
-        const { slug, filename } = computeSlugAndFilename(key)
-        const parsed = matter(raw)
-        const frontmatter = parsed.data as Record<string, unknown>
-        articles.push({
-          slug,
-          title: (frontmatter.title as string) || slug,
-          description: (frontmatter.description as string) || '',
-          filename,
-          date: formatFrontmatterDate(frontmatter.date),
-        })
-      } catch (error) {
-        console.error('Error processing file:', key, error)
-      }
-    }
-
-    return articles
+    return loadArticlesFromGlob(modules, 'articles')
   } catch (error) {
     console.error('Error reading articles (bundle):', error)
     return []
   }
 })
 
+export const useTranslationsList = routeLoader$(async () => {
+  try {
+    const modules = import.meta.glob('../translations/**/*.{md,mdx}', {
+      query: '?raw',
+      import: 'default',
+      eager: true,
+    }) as Record<string, string>
+
+    return loadArticlesFromGlob(modules, 'translations')
+  } catch (error) {
+    console.error('Error reading translations (bundle):', error)
+    return []
+  }
+})
+
+const ArticleList = component$<{ articles: Article[] }>(({ articles }) => {
+  if (articles.length === 0) {
+    return (
+      <div class="text-center p-8">
+        <div class="mb-8">
+          <div class="text-6xl mb-4">📝</div>
+          <h2 class="text-2xl font-bold text-gray-800 mb-4">No articles yet</h2>
+          <p class="text-gray-600">Will be updated soon...</p>
+        </div>
+      </div>
+    )
+  }
+
+  return (
+    <div class="max-w-2xl mx-auto space-y-6">
+      {articles.map((article) => (
+        <Link key={article.slug} href={`/${article.slug}`} class="no-underline">
+          <article class="bg-white cursor-pointer border border-gray-200 rounded-lg p-6 hover:shadow-md transition-shadow mb-4">
+            <h2 class="text-2xl font-bold text-gray-900 hover:text-blue-600 transition-colors">
+              {article.title}
+            </h2>
+            {article.date && (
+              <div class="text-gray-500 text-sm mt-1 mb-2">{article.date}</div>
+            )}
+            {article.description && (
+              <p class="text-gray-600 mb-4">{article.description}</p>
+            )}
+            <div class="inline-flex items-center text-blue-600 font-medium">
+              Read more →
+            </div>
+          </article>
+        </Link>
+      ))}
+    </div>
+  )
+})
+
 export default component$(() => {
   const articles = useArticlesList()
+  const translations = useTranslationsList()
+  const location = useLocation()
+
+  const activeTab = location.url.searchParams.get('tab') || 'articles'
+  const currentArticles =
+    activeTab === 'translations' ? translations.value : articles.value
+
+  const tabs = [
+    { id: 'articles', label: '생각', href: '/?tab=articles' },
+    { id: 'translations', label: '한국어 번역본', href: '/?tab=translations' },
+  ]
 
   return (
     <div class="container mx-auto px-4 py-8">
@@ -93,44 +164,10 @@ export default component$(() => {
           </svg>
         </a>
       </div>
-      {articles.value.length === 0 ? (
-        <div class="text-center p-8">
-          <div class="mb-8">
-            <div class="text-6xl mb-4">📝</div>
-            <h2 class="text-2xl font-bold text-gray-800 mb-4">
-              No articles yet
-            </h2>
-            <p class="text-gray-600">Will be updated soon...</p>
-          </div>
-        </div>
-      ) : (
-        <div class="max-w-2xl mx-auto space-y-6">
-          {articles.value.map((article) => (
-            <Link
-              key={article.slug}
-              href={`/${article.slug}`}
-              class="no-underline"
-            >
-              <article class="bg-white cursor-pointer border border-gray-200 rounded-lg p-6 hover:shadow-md transition-shadow mb-4">
-                <h2 class="text-2xl font-bold text-gray-900 hover:text-blue-600 transition-colors">
-                  {article.title}
-                </h2>
-                {article.date && (
-                  <div class="text-gray-500 text-sm mt-1 mb-2">
-                    {article.date}
-                  </div>
-                )}
-                {article.description && (
-                  <p class="text-gray-600 mb-4">{article.description}</p>
-                )}
-                <div class="inline-flex items-center text-blue-600 font-medium">
-                  Read more →
-                </div>
-              </article>
-            </Link>
-          ))}
-        </div>
-      )}
+
+      <Tabs tabs={tabs}>
+        <ArticleList articles={currentArticles} />
+      </Tabs>
     </div>
   )
 })
