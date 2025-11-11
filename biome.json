@@ -1,5 +1,5 @@
 {
-  "$schema": "https://biomejs.dev/schemas/1.9.4/schema.json",
+  "$schema": "https://biomejs.dev/schemas/2.3.4/schema.json",
   "formatter": {
     "enabled": true,
     "indentStyle": "space",
@@ -18,21 +18,30 @@
     "rules": {
       "recommended": true,
       "style": {
-        "noVar": "error",
         "useConst": "error"
       },
       "security": {
         "noDangerouslySetInnerHtml": "off"
       },
       "suspicious": {
-        "noDoubleEquals": "error"
+        "noDoubleEquals": "error",
+        "noVar": "error"
       }
     }
   },
-  "organizeImports": {
-    "enabled": true
-  },
+  "assist": { "actions": { "source": { "organizeImports": "on" } } },
   "files": {
-    "ignore": ["dist/**", "node_modules/**", "tmp/**", "server/**"]
+    "includes": [
+      "**",
+      "!**/dist",
+      "!**/node_modules",
+      "!**/tmp",
+      "!**/server"
+    ]
+  },
+  "css": {
+    "parser": {
+      "tailwindDirectives": true
+    }
   }
 }
