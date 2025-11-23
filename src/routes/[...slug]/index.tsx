@@ -1,7 +1,6 @@
 import { component$ } from '@builder.io/qwik'
 import type { DocumentHead } from '@builder.io/qwik-city'
 import { routeLoader$ } from '@builder.io/qwik-city'
-import matter from 'gray-matter'
 import rehypeStringify from 'rehype-stringify'
 import remarkDirective from 'remark-directive'
 import remarkGfm from 'remark-gfm'
@@ -11,6 +10,38 @@ import remarkRehype from 'remark-rehype'
 import remarkWikiLink from 'remark-wiki-link'
 import { unified } from 'unified'
 import { formatFrontmatterDate } from '~/lib/date'
+import { parseMarkdown } from '~/lib/markdown'
+
+type MarkdownCollection = {
+  baseFolder: 'articles' | 'translations'
+  modules: Record<string, string>
+}
+
+const INDEX_CANDIDATES = ['@index.md', '@index.mdx', 'index.md', 'index.mdx']
+
+const buildPathCandidates = (parts: string[], baseFolder: string): string[] => {
+  const basePath = `../../${baseFolder}/${parts.join('/')}`
+  const files = [`${basePath}.md`, `${basePath}.mdx`]
+  for (const name of INDEX_CANDIDATES) {
+    files.push(`../../${baseFolder}/${parts.join('/')}/${name}`)
+  }
+  return files
+}
+
+const findMarkdownEntry = (
+  parts: string[],
+  collections: MarkdownCollection[],
+): { key: string; modules: Record<string, string> } | null => {
+  for (const collection of collections) {
+    const candidates = buildPathCandidates(parts, collection.baseFolder)
+    for (const candidate of candidates) {
+      if (candidate in collection.modules) {
+        return { key: candidate, modules: collection.modules }
+      }
+    }
+  }
+  return null
+}
 
 interface ArticleData {
   content: string
@@ -38,40 +69,35 @@ export const useArticleData = routeLoader$<ArticleData>(
     }
 
     try {
-      const indexCandidates = [
-        '@index.md',
-        '@index.mdx',
-        'index.md',
-        'index.mdx',
+      const collections: MarkdownCollection[] = [
+        {
+          baseFolder: 'articles',
+          modules: import.meta.glob('../../articles/**/*.{md,mdx}', {
+            query: '?raw',
+            import: 'default',
+            eager: true,
+          }) as Record<string, string>,
+        },
+        {
+          baseFolder: 'translations',
+          modules: import.meta.glob('../../translations/**/*.{md,mdx}', {
+            query: '?raw',
+            import: 'default',
+            eager: true,
+          }) as Record<string, string>,
+        },
       ]
 
-      const modules = import.meta.glob('../../articles/**/*.{md,mdx}', {
-        query: '?raw',
-        import: 'default',
-        eager: true,
-      }) as Record<string, string>
-
-      const findKeyForParts = (partsArr: string[]): string | null => {
-        const directMd = `../../articles/${partsArr.join('/')}.md`
-        const directMdx = `../../articles/${partsArr.join('/')}.mdx`
-        if (modules[directMd]) return directMd
-        if (modules[directMdx]) return directMdx
-        for (const name of indexCandidates) {
-          const idx = `../../articles/${partsArr.join('/')}/${name}`
-          if (modules[idx]) return idx
-        }
-        return null
-      }
-
-      const matchedKey = parts.length > 0 ? findKeyForParts(parts) : null
-      if (!matchedKey) {
+      const matchedEntry =
+        parts.length > 0 ? findMarkdownEntry(parts, collections) : null
+      if (!matchedEntry) {
         status(404)
         throw new Error(`Article not found: ${raw}`)
       }
 
-      const fileContent = modules[matchedKey]
+      const fileContent = matchedEntry.modules[matchedEntry.key]
 
-      const parsed = matter(fileContent)
+      const parsed = parseMarkdown(fileContent)
 
       const processor = unified()
         .use(remarkParse)

@@ -5,9 +5,9 @@ import {
   routeLoader$,
   useLocation,
 } from '@builder.io/qwik-city'
-import matter from 'gray-matter'
 import { Tabs } from '~/components/tabs'
 import { formatFrontmatterDate } from '~/lib/date'
+import { parseMarkdown } from '~/lib/markdown'
 
 type Article = {
   slug: string
@@ -45,7 +45,7 @@ const loadArticlesFromGlob = (
   for (const [key, raw] of Object.entries(modules)) {
     try {
       const { slug, filename } = computeSlugAndFilename(key, baseFolder)
-      const parsed = matter(raw)
+      const parsed = parseMarkdown(raw)
       const frontmatter = parsed.data as Record<string, unknown>
       articles.push({
         slug,
