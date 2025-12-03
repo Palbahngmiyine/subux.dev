@@ -139,19 +139,19 @@ export default component$(() => {
   const formattedDate = formatFrontmatterDate(fm.date)
 
   return (
-    <section class="max-w-2xl mx-auto px-4 py-8">
+    <section class="max-w-2xl mx-auto px-3 sm:px-4 py-4 sm:py-8 overflow-hidden">
       <div>
-        <a href="/" class="default-link">
+        <a href="/" class="default-link text-sm sm:text-base">
           <b>←</b> Back to Home
         </a>
       </div>
-      <article class="w-full mx-auto px-4 py-8 bg-white rounded-lg mt-4">
-        <h1 class="text-4xl font-bold break-keep">{articleData.value.title}</h1>
+      <article class="w-full mx-auto px-3 sm:px-4 py-4 sm:py-8 bg-white rounded-lg mt-3 sm:mt-4 overflow-hidden">
+        <h1 class="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold break-keep">{articleData.value.title}</h1>
         {formattedDate && (
-          <div class="text-gray-500 text-sm mt-2 mb-6">{formattedDate}</div>
+          <div class="text-gray-500 text-xs sm:text-sm mt-2 mb-4 sm:mb-6">{formattedDate}</div>
         )}
         <div
-          class="prose prose-lg max-w-none break-keep"
+          class="prose prose-sm sm:prose-base md:prose-lg max-w-none break-keep overflow-x-auto"
           dangerouslySetInnerHTML={articleData.value.content}
         />
       </article>

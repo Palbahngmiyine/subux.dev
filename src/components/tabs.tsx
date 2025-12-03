@@ -18,8 +18,8 @@ export const Tabs = component$<TabsProps>(({ tabs }) => {
 
   return (
     <div class="w-full">
-      <div class="border-b border-gray-200 mb-6">
-        <nav class="flex space-x-8" aria-label="Tabs">
+      <div class="border-b border-gray-200 mb-4 sm:mb-6 overflow-x-auto -mx-3 px-3 sm:mx-0 sm:px-0">
+        <nav class="flex space-x-4 sm:space-x-8 min-w-max" aria-label="Tabs">
           {tabs.map((tab) => {
             const isActive = activeTab === tab.id
             return (
@@ -27,7 +27,7 @@ export const Tabs = component$<TabsProps>(({ tabs }) => {
                 key={tab.id}
                 href={`${currentPath}?tab=${tab.id}`}
                 class={`
-                  py-4 px-1 border-b-2 font-medium text-sm transition-colors
+                  py-3 sm:py-4 px-1 border-b-2 font-medium text-xs sm:text-sm transition-colors whitespace-nowrap
                   ${
                     isActive
                       ? 'border-blue-500 text-blue-600'

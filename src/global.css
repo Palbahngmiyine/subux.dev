@@ -20,17 +20,20 @@
     sans-serif;
 }
 
+html,
 body {
   @apply bg-slate-100;
+  overflow-x: hidden;
+  max-width: 100vw;
 }
 
 h1 {
-  @apply font-extrabold text-4xl my-6;
+  @apply font-extrabold text-2xl sm:text-3xl md:text-4xl my-4 sm:my-6;
   color: #1f1f1f;
 }
 
 h2 {
-  @apply font-bold text-3xl my-4;
+  @apply font-bold text-xl sm:text-2xl md:text-3xl my-3 sm:my-4;
   color: #1f1f1f;
 }
 
@@ -57,9 +60,11 @@ a {
 
 li a,
 p a {
-  @apply px-2 py-1 font-bold;
+  @apply px-2 py-1 font-bold inline-block;
   background-color: #c2e7ff;
   border-radius: 16px;
+  word-break: break-all;
+  overflow-wrap: break-word;
 }
 
 li a:hover,
@@ -74,8 +79,33 @@ hr {
 }
 
 p {
-  @apply my-6 leading-6;
+  @apply my-6 leading-relaxed;
   color: #1f1f1f;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+}
+
+/* Blockquote styles */
+blockquote {
+  @apply my-6 pl-6 border-l-4 border-gray-300 italic;
+  color: #4b5563;
+  line-height: 2;
+}
+
+blockquote p {
+  @apply my-4;
+  line-height: 2;
+}
+
+blockquote strong {
+  @apply not-italic;
+}
+
+@media (max-width: 640px) {
+  blockquote {
+    @apply pl-4 text-sm;
+    line-height: 2.4;
+  }
 }
 
 em {
@@ -90,6 +120,8 @@ ul {
 li {
   line-height: 1.75;
   color: #1f1f1f;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
 }
 
 /* Tabs component styles */
@@ -134,7 +166,7 @@ li {
 
 /* Obsidian Callouts */
 .callout {
-  @apply border-l-4 p-4 my-4 rounded-r-lg;
+  @apply border-l-4 p-3 sm:p-4 my-3 sm:my-4 rounded-r-lg text-sm sm:text-base;
   border-left-width: 4px;
 }
 
@@ -349,16 +381,26 @@ li {
 }
 
 /* GFM Table styles */
+.table-wrapper {
+  @apply overflow-x-auto my-4 -mx-4 px-4;
+}
+
 table {
-  @apply w-full border-collapse border border-gray-300 my-4;
+  @apply w-full border-collapse border border-gray-300 my-4 min-w-full;
+}
+
+@media (max-width: 640px) {
+  table {
+    @apply text-sm;
+  }
 }
 
 th {
-  @apply bg-gray-100 border border-gray-300 px-4 py-2 font-semibold text-left;
+  @apply bg-gray-100 border border-gray-300 px-2 sm:px-4 py-2 font-semibold text-left whitespace-nowrap;
 }
 
 td {
-  @apply border border-gray-300 px-4 py-2;
+  @apply border border-gray-300 px-2 sm:px-4 py-2;
 }
 
 /* GFM Task list styles */
@@ -373,15 +415,18 @@ del {
 
 /* Code blocks with syntax highlighting support */
 pre {
-  @apply bg-gray-100 p-4 rounded-lg overflow-x-auto my-4;
+  @apply bg-gray-100 p-3 sm:p-4 rounded-lg overflow-x-auto my-4 text-xs sm:text-sm;
+  -webkit-overflow-scrolling: touch;
 }
 
 code {
-  @apply bg-gray-100 px-2 py-1 rounded text-sm font-mono;
+  @apply bg-gray-100 px-1.5 sm:px-2 py-0.5 sm:py-1 rounded text-xs sm:text-sm font-mono;
+  word-break: break-word;
 }
 
 pre code {
   @apply bg-transparent p-0;
+  word-break: normal;
 }
 
 /* Footnotes */

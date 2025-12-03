@@ -105,20 +105,20 @@ const ArticleList = component$<{ articles: Article[] }>(({ articles }) => {
   }
 
   return (
-    <div class="max-w-2xl mx-auto space-y-6">
+    <div class="max-w-2xl mx-auto space-y-4 sm:space-y-6">
       {articles.map((article) => (
         <Link key={article.slug} href={`/${article.slug}`} class="no-underline">
-          <article class="bg-white cursor-pointer border border-gray-200 rounded-lg p-6 hover:shadow-md transition-shadow mb-4">
-            <h2 class="text-2xl font-bold text-gray-900 hover:text-blue-600 transition-colors">
+          <article class="bg-white cursor-pointer border border-gray-200 rounded-lg p-4 sm:p-6 hover:shadow-md transition-shadow mb-3 sm:mb-4">
+            <h2 class="text-lg sm:text-xl md:text-2xl font-bold text-gray-900 hover:text-blue-600 transition-colors break-keep">
               {article.title}
             </h2>
             {article.date && (
-              <div class="text-gray-500 text-sm mt-1 mb-2">{article.date}</div>
+              <div class="text-gray-500 text-xs sm:text-sm mt-1 mb-2">{article.date}</div>
             )}
             {article.description && (
-              <p class="text-gray-600 mb-4">{article.description}</p>
+              <p class="text-gray-600 text-sm sm:text-base mb-3 sm:mb-4 break-keep">{article.description}</p>
             )}
-            <div class="inline-flex items-center text-blue-600 font-medium">
+            <div class="inline-flex items-center text-blue-600 font-medium text-sm sm:text-base">
               Read more →
             </div>
           </article>
@@ -143,22 +143,22 @@ export default component$(() => {
   ]
 
   return (
-    <div class="container mx-auto px-4 py-8">
-      <div class="mb-8 flex items-center justify-between">
-        <h1 class="text-4xl font-bold">subux.dev</h1>
+    <div class="container mx-auto px-3 sm:px-4 py-4 sm:py-8">
+      <div class="mb-6 sm:mb-8 flex items-center justify-between gap-4">
+        <h1 class="text-2xl sm:text-3xl md:text-4xl font-bold">subux.dev</h1>
         <a
           href="https://github.com/Palbahngmiyine"
           target="_blank"
           rel="noopener noreferrer"
           aria-label="Open GitHub repository"
-          class="text-gray-500 hover:text-gray-900 transition-colors"
+          class="text-gray-500 hover:text-gray-900 transition-colors flex-shrink-0"
         >
           <span class="sr-only">Open GitHub repository</span>
           <svg
             viewBox="0 0 16 16"
             fill="currentColor"
             aria-hidden="true"
-            class="h-8 w-8"
+            class="h-6 w-6 sm:h-8 sm:w-8"
           >
             <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z" />
           </svg>

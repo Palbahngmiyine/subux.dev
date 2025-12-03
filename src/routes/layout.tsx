@@ -21,7 +21,7 @@ export const useServerTimeLoader = routeLoader$(() => {
 
 export default component$(() => {
   return (
-    <main class="container px-2 md:px-8 pt-8 mx-auto flex-1 flex flex-col">
+    <main class="container px-2 sm:px-4 md:px-8 pt-4 sm:pt-8 mx-auto flex-1 flex flex-col">
       <Slot />
     </main>
   )
