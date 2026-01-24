@@ -9,6 +9,7 @@ import remarkParse from 'remark-parse'
 import remarkRehype from 'remark-rehype'
 import remarkWikiLink from 'remark-wiki-link'
 import { unified } from 'unified'
+import { NotFound } from '~/components/not-found'
 import { parseMarkdown } from '~/lib/markdown'
 
 type MarkdownCollection = {
@@ -73,6 +74,7 @@ interface ArticleData {
   frontmatter: Record<string, unknown>
   title: string
   formattedDate: string | null
+  isNotFound: boolean
 }
 
 export const useArticleData = routeLoader$<ArticleData>(
@@ -90,6 +92,7 @@ export const useArticleData = routeLoader$<ArticleData>(
         frontmatter: {},
         title: 'Not Found',
         formattedDate: null,
+        isNotFound: true,
       }
     }
 
@@ -117,7 +120,13 @@ export const useArticleData = routeLoader$<ArticleData>(
         parts.length > 0 ? findMarkdownEntry(parts, collections) : null
       if (!matchedEntry) {
         status(404)
-        throw new Error(`Article not found: ${raw}`)
+        return {
+          content: '',
+          frontmatter: {},
+          title: 'Not Found',
+          formattedDate: null,
+          isNotFound: true,
+        }
       }
 
       const fileContent = matchedEntry.modules[matchedEntry.key]
@@ -151,10 +160,17 @@ export const useArticleData = routeLoader$<ArticleData>(
         frontmatter: fm,
         title,
         formattedDate: formatKoreanDate(fm.date),
+        isNotFound: false,
       }
     } catch {
       status(404)
-      throw new Error(`Article not found: ${raw}`)
+      return {
+        content: '',
+        frontmatter: {},
+        title: 'Not Found',
+        formattedDate: null,
+        isNotFound: true,
+      }
     }
   },
 )
@@ -162,11 +178,15 @@ export const useArticleData = routeLoader$<ArticleData>(
 export default component$(() => {
   const articleData = useArticleData()
 
+  if (articleData.value.isNotFound) {
+    return <NotFound />
+  }
+
   return (
     <section class="content-wrapper">
       <nav class="article-nav">
         <a href="/" class="back-link">
-          Back to Home
+          ← 처음으로
         </a>
       </nav>
       <article>
@@ -187,6 +207,13 @@ export default component$(() => {
 
 export const head: DocumentHead = ({ resolveValue }) => {
   const article = resolveValue(useArticleData)
+
+  if (article?.isNotFound) {
+    return {
+      title: '이곳엔 아무것도 없습니다 | subux.dev',
+    }
+  }
+
   const fm = article?.frontmatter as Record<string, unknown> | undefined
   const fmTitle = typeof fm?.title === 'string' ? fm.title : ''
 
