@@ -6,7 +6,6 @@ import {
   useLocation,
 } from '@builder.io/qwik-city'
 import { Tabs } from '~/components/tabs'
-import { formatFrontmatterDate } from '~/lib/date'
 import { parseMarkdown } from '~/lib/markdown'
 
 type Article = {
@@ -15,6 +14,7 @@ type Article = {
   description: string
   filename: string
   date: string | null
+  dateObj: Date | null
 }
 
 const INDEX_CANDIDATES = ['@index.md', '@index.mdx', 'index.md', 'index.mdx']
@@ -28,13 +28,41 @@ const computeSlugAndFilename = (
   const filename = afterBase
   const withoutExt = afterBase.replace(/\.(md|mdx)$/i, '')
 
-  // Handle index candidates -> slug is directory path
   if (INDEX_CANDIDATES.some((name) => afterBase.endsWith(`/${name}`))) {
     const dir = afterBase.split('/').slice(0, -1).join('/')
     return { slug: dir, filename }
   }
 
   return { slug: withoutExt, filename }
+}
+
+const parseDate = (
+  dateValue: unknown,
+): { formatted: string | null; dateObj: Date | null } => {
+  if (!dateValue) return { formatted: null, dateObj: null }
+
+  let date: Date | null = null
+
+  if (dateValue instanceof Date) {
+    date = dateValue
+  } else if (typeof dateValue === 'string') {
+    const parsed = new Date(dateValue)
+    if (!Number.isNaN(parsed.getTime())) {
+      date = parsed
+    }
+  } else if (typeof dateValue === 'number') {
+    date = new Date(dateValue)
+  }
+
+  if (!date || Number.isNaN(date.getTime())) {
+    return { formatted: null, dateObj: null }
+  }
+
+  const month = date.getMonth() + 1
+  const day = date.getDate()
+  const formatted = `${month}월 ${day}일`
+
+  return { formatted, dateObj: date }
 }
 
 const loadArticlesFromGlob = (
@@ -47,17 +75,27 @@ const loadArticlesFromGlob = (
       const { slug, filename } = computeSlugAndFilename(key, baseFolder)
       const parsed = parseMarkdown(raw)
       const frontmatter = parsed.data as Record<string, unknown>
+      const { formatted, dateObj } = parseDate(frontmatter.date)
       articles.push({
         slug,
         title: (frontmatter.title as string) || slug,
         description: (frontmatter.description as string) || '',
         filename,
-        date: formatFrontmatterDate(frontmatter.date),
+        date: formatted,
+        dateObj,
       })
     } catch (error) {
       console.error('Error processing file:', key, error)
     }
   }
+
+  articles.sort((a, b) => {
+    if (!a.dateObj && !b.dateObj) return 0
+    if (!a.dateObj) return 1
+    if (!b.dateObj) return -1
+    return b.dateObj.getTime() - a.dateObj.getTime()
+  })
+
   return articles
 }
 
@@ -91,40 +129,62 @@ export const useTranslationsList = routeLoader$(async () => {
   }
 })
 
+type GroupedArticles = { year: number; articles: Article[] }[]
+
+const groupArticlesByYear = (articles: Article[]): GroupedArticles => {
+  const groups: Record<number, Article[]> = {}
+
+  for (const article of articles) {
+    const year = article.dateObj?.getFullYear() || new Date().getFullYear()
+    if (!groups[year]) {
+      groups[year] = []
+    }
+    groups[year].push(article)
+  }
+
+  return Object.entries(groups)
+    .map(([year, arts]) => ({
+      year: Number.parseInt(year, 10),
+      articles: arts,
+    }))
+    .sort((a, b) => b.year - a.year)
+}
+
 const ArticleList = component$<{ articles: Article[] }>(({ articles }) => {
   if (articles.length === 0) {
     return (
-      <div class="text-center p-8">
-        <div class="mb-8">
-          <div class="text-6xl mb-4">📝</div>
-          <h2 class="text-2xl font-bold text-gray-800 mb-4">No articles yet</h2>
-          <p class="text-gray-600">Will be updated soon...</p>
-        </div>
+      <div class="empty-state">
+        <p>No articles yet. Will be updated soon...</p>
       </div>
     )
   }
 
+  const grouped = groupArticlesByYear(articles)
+
   return (
-    <div class="max-w-2xl mx-auto space-y-4 sm:space-y-6">
-      {articles.map((article) => (
-        <Link key={article.slug} href={`/${article.slug}`} class="no-underline">
-          <article class="bg-white cursor-pointer border border-gray-200 rounded-lg p-4 sm:p-6 hover:shadow-md transition-shadow mb-3 sm:mb-4">
-            <h2 class="text-lg sm:text-xl md:text-2xl font-bold text-gray-900 hover:text-blue-600 transition-colors break-keep">
-              {article.title}
-            </h2>
-            {article.date && (
-              <div class="text-gray-500 text-xs sm:text-sm mt-1 mb-2">{article.date}</div>
-            )}
-            {article.description && (
-              <p class="text-gray-600 text-sm sm:text-base mb-3 sm:mb-4 break-keep">{article.description}</p>
-            )}
-            <div class="inline-flex items-center text-blue-600 font-medium text-sm sm:text-base">
-              Read more →
-            </div>
-          </article>
-        </Link>
+    <nav class="articles">
+      {grouped.map((group) => (
+        <div key={group.year}>
+          <h2>
+            <time dateTime={String(group.year)}>{group.year}년</time>
+          </h2>
+          <ul>
+            {group.articles.map((article) => (
+              <li key={article.slug}>
+                {article.date && (
+                  <time dateTime={article.dateObj?.toISOString().split('T')[0]}>
+                    {article.date}
+                  </time>
+                )}
+                <Link href={`/${article.slug}`} class="article-link">
+                  {article.title}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
       ))}
-    </div>
+    </nav>
   )
 })
 
@@ -143,27 +203,28 @@ export default component$(() => {
   ]
 
   return (
-    <div class="container mx-auto px-3 sm:px-4 py-4 sm:py-8">
-      <div class="mb-6 sm:mb-8 flex items-center justify-between gap-4">
-        <h1 class="text-2xl sm:text-3xl md:text-4xl font-bold">subux.dev</h1>
+    <div class="page-wrapper">
+      <header class="site-header">
+        <h1>subux.dev</h1>
         <a
           href="https://github.com/Palbahngmiyine"
           target="_blank"
           rel="noopener noreferrer"
-          aria-label="Open GitHub repository"
-          class="text-gray-500 hover:text-gray-900 transition-colors flex-shrink-0"
+          class="github-link"
+          title="GitHub"
         >
-          <span class="sr-only">Open GitHub repository</span>
+          <span class="sr-only">GitHub</span>
           <svg
             viewBox="0 0 16 16"
             fill="currentColor"
             aria-hidden="true"
-            class="h-6 w-6 sm:h-8 sm:w-8"
+            width="24"
+            height="24"
           >
             <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z" />
           </svg>
         </a>
-      </div>
+      </header>
 
       <Tabs tabs={tabs}>
         <ArticleList articles={currentArticles} />

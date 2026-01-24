@@ -9,7 +9,6 @@ import remarkParse from 'remark-parse'
 import remarkRehype from 'remark-rehype'
 import remarkWikiLink from 'remark-wiki-link'
 import { unified } from 'unified'
-import { formatFrontmatterDate } from '~/lib/date'
 import { parseMarkdown } from '~/lib/markdown'
 
 type MarkdownCollection = {
@@ -43,28 +42,54 @@ const findMarkdownEntry = (
   return null
 }
 
+const formatKoreanDate = (dateValue: unknown): string | null => {
+  if (!dateValue) return null
+
+  let date: Date | null = null
+
+  if (dateValue instanceof Date) {
+    date = dateValue
+  } else if (typeof dateValue === 'string') {
+    const parsed = new Date(dateValue)
+    if (!Number.isNaN(parsed.getTime())) {
+      date = parsed
+    }
+  } else if (typeof dateValue === 'number') {
+    date = new Date(dateValue)
+  }
+
+  if (!date || Number.isNaN(date.getTime())) {
+    return null
+  }
+
+  const year = date.getFullYear()
+  const month = date.getMonth() + 1
+  const day = date.getDate()
+  return `${year}년 ${month}월 ${day}일`
+}
+
 interface ArticleData {
   content: string
   frontmatter: Record<string, unknown>
   title: string
+  formattedDate: string | null
 }
 
 export const useArticleData = routeLoader$<ArticleData>(
   async ({ params, status }) => {
-    // Qwik City `[...slug]` provides `params.slug` as a slash-joined string
     const raw = params.slug ?? ''
     const parts = String(raw)
       .split('/')
       .map((p) => p.trim())
       .filter(Boolean)
 
-    // Edge/Chrome DevTools가 자동으로 요청하는 well-known 경로는 아티클 라우팅에서 조용히 무시 (404 반환, 에러 미발생)
     if (raw.startsWith('.well-known/')) {
       status(404)
       return {
         content: '',
         frontmatter: {},
         title: 'Not Found',
+        formattedDate: null,
       }
     }
 
@@ -125,6 +150,7 @@ export const useArticleData = routeLoader$<ArticleData>(
         content: result.toString(),
         frontmatter: fm,
         title,
+        formattedDate: formatKoreanDate(fm.date),
       }
     } catch {
       status(404)
@@ -135,23 +161,23 @@ export const useArticleData = routeLoader$<ArticleData>(
 
 export default component$(() => {
   const articleData = useArticleData()
-  const fm = articleData.value.frontmatter as Record<string, unknown>
-  const formattedDate = formatFrontmatterDate(fm.date)
 
   return (
-    <section class="max-w-2xl mx-auto px-3 sm:px-4 py-4 sm:py-8 overflow-hidden">
-      <div>
-        <a href="/" class="default-link text-sm sm:text-base">
-          <b>←</b> Back to Home
+    <section class="content-wrapper">
+      <nav class="article-nav">
+        <a href="/" class="back-link">
+          Back to Home
         </a>
-      </div>
-      <article class="w-full mx-auto px-3 sm:px-4 py-4 sm:py-8 bg-white rounded-lg mt-3 sm:mt-4 overflow-hidden">
-        <h1 class="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold break-keep">{articleData.value.title}</h1>
-        {formattedDate && (
-          <div class="text-gray-500 text-xs sm:text-sm mt-2 mb-4 sm:mb-6">{formattedDate}</div>
-        )}
+      </nav>
+      <article>
+        <header class="article-header">
+          <h1>{articleData.value.title}</h1>
+          {articleData.value.formattedDate && (
+            <time>{articleData.value.formattedDate}</time>
+          )}
+        </header>
         <div
-          class="prose prose-sm sm:prose-base md:prose-lg max-w-none break-keep overflow-x-auto"
+          class="article-content"
           dangerouslySetInnerHTML={articleData.value.content}
         />
       </article>
