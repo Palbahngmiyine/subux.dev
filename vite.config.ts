@@ -1,12 +1,12 @@
-import { defineConfig } from 'vite'
 import { qwikVite } from '@builder.io/qwik/optimizer'
 import { qwikCity } from '@builder.io/qwik-city/vite'
-import tsconfigPaths from 'vite-tsconfig-paths'
 import tailwindcss from '@tailwindcss/vite'
-import remarkWikiLink from 'remark-wiki-link'
-import remarkObsidianCallout from 'remark-obsidian-callout'
-import remarkGfm from 'remark-gfm'
 import remarkDirective from 'remark-directive'
+import remarkGfm from 'remark-gfm'
+import remarkObsidianCallout from 'remark-obsidian-callout'
+import remarkWikiLink from 'remark-wiki-link'
+import { defineConfig } from 'vite'
+import tsconfigPaths from 'vite-tsconfig-paths'
 
 export default defineConfig(() => {
   return {

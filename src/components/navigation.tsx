@@ -1,5 +1,5 @@
 import { component$ } from '@builder.io/qwik'
-import { useLocation, Link } from '@builder.io/qwik-city'
+import { Link, useLocation } from '@builder.io/qwik-city'
 
 export const Navigation = component$(() => {
   const location = useLocation()

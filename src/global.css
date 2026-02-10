@@ -202,7 +202,6 @@ a.back-link {
 
 a.back-link:hover {
   background-color: var(--color-primary-hover);
-  transform: translateX(-2px);
 }
 
 hr {
@@ -346,7 +345,6 @@ a.tab-link[aria-current="page"] {
 
 .articles li a.article-link:hover {
   background-color: var(--color-primary-hover);
-  transform: translateX(4px);
   box-shadow: var(--shadow-sm);
 }
 
