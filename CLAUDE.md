@@ -88,7 +88,7 @@ Using Vite+ (Oxlint + Oxfmt, not Prettier/ESLint/Biome):
 ## Important Patterns
 
 1. **Article slug computation**: Remove extensions, handle index files specially (slug becomes parent directory)
-2. **Date formatting**: Use `formatFrontmatterDate()` from `~/lib/date.ts` for consistent date display
+2. **Date formatting**: Each route handles date formatting inline
 3. **Caching strategy** (in `src/routes/layout.tsx`):
    - `staleWhileRevalidate`: 7 days
    - `maxAge`: 5 seconds
