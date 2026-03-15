@@ -1,7 +1,7 @@
 import { component$, Slot } from '@builder.io/qwik'
 import { useLocation } from '@builder.io/qwik-city'
 
-export interface Tab {
+interface Tab {
   id: string
   label: string
   href: string
