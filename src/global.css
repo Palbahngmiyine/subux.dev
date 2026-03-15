@@ -1,5 +1,5 @@
-@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css");
-@import "tailwindcss";
+@import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css');
+@import 'tailwindcss';
 
 :root {
   --space-1: 8px;
@@ -25,9 +25,9 @@
   --color-code-bg: rgba(0, 0, 0, 0.04);
 
   --font-sans:
-    "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont,
-    system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo",
-    "Noto Sans KR", "Malgun Gothic", sans-serif;
+    'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont,
+    system-ui, Roboto, 'Helvetica Neue', 'Segoe UI', 'Apple SD Gothic Neo',
+    'Noto Sans KR', 'Malgun Gothic', sans-serif;
 
   --radius-sm: 8px;
   --radius-md: 12px;
@@ -161,10 +161,10 @@ h3 {
 }
 
 a:where(
-    :not(.tab-link):not(.github-link):not(.back-link):not(sup a):not(
-        .article-link
-      )
-  ) {
+  :not(.tab-link):not(.github-link):not(.back-link):not(sup a):not(
+      .article-link
+    )
+) {
   color: var(--color-text);
   text-decoration: none;
   background-color: var(--color-primary);
@@ -282,7 +282,7 @@ a.tab-link:hover {
   color: var(--color-text);
 }
 
-a.tab-link[aria-current="page"] {
+a.tab-link[aria-current='page'] {
   color: var(--color-text);
   border-bottom-color: var(--color-primary);
   font-weight: 600;
@@ -597,7 +597,7 @@ tr:last-child td {
   border-bottom: none;
 }
 
-input[type="checkbox"] {
+input[type='checkbox'] {
   margin-right: var(--space-1);
   width: var(--space-2);
   height: var(--space-2);
@@ -623,7 +623,7 @@ code {
   background-color: var(--color-code-bg);
   padding: 2px 6px;
   font-size: 0.875rem;
-  font-family: "SF Mono", Menlo, Monaco, Consolas, monospace;
+  font-family: 'SF Mono', Menlo, Monaco, Consolas, monospace;
   border-radius: var(--radius-sm);
 }
 

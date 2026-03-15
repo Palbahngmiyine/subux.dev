@@ -2,11 +2,11 @@ import { cloudflarePagesAdapter } from '@builder.io/qwik-city/adapters/cloudflar
 import { extendConfig } from '@builder.io/qwik-city/vite'
 import baseConfig from '../../vite.config'
 
-export default extendConfig(baseConfig, () => {
+export default extendConfig(baseConfig as any, () => {
   return {
     build: {
       ssr: true,
-      rollupOptions: {
+      rolldownOptions: {
         input: ['src/entry.cloudflare-pages.tsx', '@qwik-city-plan'],
         external: [
           'node:fs',
