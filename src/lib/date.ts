@@ -1,5 +1,5 @@
 export function formatFrontmatterDate(value: unknown): string | null {
-  if (value == null) return null
+  if (value === null || value === undefined) return null
 
   let dateValue: Date
   if (value instanceof Date) {

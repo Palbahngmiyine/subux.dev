@@ -9,24 +9,28 @@ This is a personal blog/portfolio website (subux.dev) built with Qwik and deploy
 ## Commands
 
 ### Development
+
 - `pnpm dev` - Start development server in SSR mode
 - `pnpm start` - Alternative dev server with auto-open
 - `pnpm dev.debug` - Start dev server with Node.js inspector for debugging
 
 ### Building
+
 - `pnpm build` - Full production build (client + server)
 - `pnpm build.client` - Build client-side only
 - `pnpm build.server` - Build server adapter for Cloudflare Pages
 - `pnpm build.types` - Type-check without emitting files
 
 ### Code Quality
-- `pnpm lint` - Run Biome linter
+
+- `pnpm lint` - Run Oxlint linter (via Vite+)
 - `pnpm lint.fix` - Auto-fix linting issues
-- `pnpm fmt` - Format code with Biome
+- `pnpm fmt` - Format code with Oxfmt (via Vite+)
 - `pnpm fmt.check` - Check formatting without modifying
 - `pnpm check` - Run both lint and format checks
 
 ### Deployment
+
 - `pnpm serve` - Test production build locally with Wrangler (requires nodejs_als compatibility flag)
 - `pnpm deploy` - Deploy to Cloudflare Pages
 
@@ -55,6 +59,7 @@ Articles are stored in `src/articles/` as Markdown/MDX files organized by year (
 ### SSR Configuration
 
 The app uses Vite + Qwik with SSR. Key external dependencies for SSR are marked in `vite.config.ts` and `adapters/cloudflare-pages/vite.config.ts`:
+
 - Node builtins: `node:fs`, `node:path`
 - Markdown libs: `gray-matter`, `unified`, remark/rehype plugins
 
@@ -66,14 +71,15 @@ Cloudflare Pages with Node.js compatibility (`nodejs_compat` flag in `wrangler.t
 
 ## Code Style
 
-Using Biome (not Prettier/ESLint):
+Using Vite+ (Oxlint + Oxfmt, not Prettier/ESLint/Biome):
+
 - 2-space indentation
-- Single quotes for JS/TS, double quotes for JSX
+- Single quotes for JS/TS
 - Semicolons only when necessary (ASI)
 - Line width: 80 characters
-- `noVar` and `useConst` enforced
-- `noDoubleEquals` enforced (use `===`)
-- `noDangerouslySetInnerHtml` disabled (needed for article rendering)
+- `no-var` and `prefer-const` enforced
+- `eqeqeq` enforced (use `===`)
+- `react/no-danger` disabled (needed for article rendering)
 
 ## Path Aliases
 

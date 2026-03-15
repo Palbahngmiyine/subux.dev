@@ -6,4 +6,4 @@ pages_build_output_dir = "dist"
 compatibility_flags = ["nodejs_compat"]
 
 [env.preview]
-compatibility_flags = ["nodejs_compat"] 
+compatibility_flags = ["nodejs_compat"]
