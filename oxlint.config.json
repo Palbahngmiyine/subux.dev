@@ -1,9 +1,0 @@
-{
-  "rules": {
-    "eslint/prefer-const": "error",
-    "eslint/eqeqeq": "error",
-    "eslint/no-var": "error",
-    "react/no-danger": "off"
-  },
-  "ignorePatterns": ["dist/**", "node_modules/**", "tmp/**", "server/**"]
-}

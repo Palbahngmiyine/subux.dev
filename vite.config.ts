@@ -64,6 +64,15 @@ export default defineConfig({
   define: {
     global: 'globalThis',
   },
+  lint: {
+    ignorePatterns: ['dist/**', 'node_modules/**', 'tmp/**', 'server/**'],
+    rules: {
+      'eslint/prefer-const': 'error',
+      'eslint/eqeqeq': 'error',
+      'eslint/no-var': 'error',
+      'react/no-danger': 'off',
+    },
+  },
   fmt: {
     ignorePatterns: ['dist/**', 'node_modules/**', 'tmp/**', 'server/**'],
     printWidth: 80,
