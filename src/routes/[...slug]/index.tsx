@@ -11,6 +11,7 @@ import remarkWikiLink from 'remark-wiki-link'
 import { unified } from 'unified'
 import { NotFound } from '~/components/not-found'
 import { parseMarkdown } from '~/lib/markdown'
+import rehypeFootnoteTooltip from '~/lib/rehype-footnote-tooltip'
 
 type MarkdownCollection = {
   baseFolder: 'articles' | 'translations'
@@ -146,6 +147,7 @@ export const useArticleData = routeLoader$<ArticleData>(
         })
         .use(remarkObsidianCallout)
         .use(remarkRehype)
+        .use(rehypeFootnoteTooltip)
         .use(rehypeStringify)
 
       const result = await processor.process(parsed.content)
