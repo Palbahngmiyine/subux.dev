@@ -1,4 +1,4 @@
 interface:
-  display_name: "Translate Tech Article to Korean"
-  short_description: "Translate English tech articles into Korean Markdown"
-  default_prompt: "Use $translate-tech-article-ko to turn this English technical article into publication-ready Korean Markdown for src/translations/."
+  display_name: 'Translate Tech Article to Korean'
+  short_description: 'Translate English tech articles into Korean Markdown'
+  default_prompt: 'Use $translate-tech-article-ko to turn this English technical article into publication-ready Korean Markdown for src/translations/.'
