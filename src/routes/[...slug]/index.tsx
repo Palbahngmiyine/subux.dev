@@ -14,7 +14,7 @@ import { parseMarkdown } from '~/lib/markdown'
 import rehypeFootnoteTooltip from '~/lib/rehype-footnote-tooltip'
 
 type MarkdownCollection = {
-  baseFolder: 'articles' | 'translations'
+  baseFolder: 'articles' | 'tech' | 'translations'
   modules: Record<string, string>
 }
 
@@ -102,6 +102,14 @@ export const useArticleData = routeLoader$<ArticleData>(
         {
           baseFolder: 'articles',
           modules: import.meta.glob('../../articles/**/*.{md,mdx}', {
+            query: '?raw',
+            import: 'default',
+            eager: true,
+          }) as Record<string, string>,
+        },
+        {
+          baseFolder: 'tech',
+          modules: import.meta.glob('../../tech/**/*.{md,mdx}', {
             query: '?raw',
             import: 'default',
             eager: true,

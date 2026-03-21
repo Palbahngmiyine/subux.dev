@@ -114,6 +114,21 @@ export const useArticlesList = routeLoader$(async () => {
   }
 })
 
+export const useTechList = routeLoader$(async () => {
+  try {
+    const modules = import.meta.glob('../tech/**/*.{md,mdx}', {
+      query: '?raw',
+      import: 'default',
+      eager: true,
+    }) as Record<string, string>
+
+    return loadArticlesFromGlob(modules, 'tech')
+  } catch (error) {
+    console.error('Error reading tech (bundle):', error)
+    return []
+  }
+})
+
 export const useTranslationsList = routeLoader$(async () => {
   try {
     const modules = import.meta.glob('../translations/**/*.{md,mdx}', {
@@ -190,16 +205,22 @@ const ArticleList = component$<{ articles: Article[] }>(({ articles }) => {
 
 export default component$(() => {
   const articles = useArticlesList()
+  const tech = useTechList()
   const translations = useTranslationsList()
   const location = useLocation()
 
   const activeTab = location.url.searchParams.get('tab') || 'articles'
   const currentArticles =
-    activeTab === 'translations' ? translations.value : articles.value
+    activeTab === 'tech'
+      ? tech.value
+      : activeTab === 'translations'
+        ? translations.value
+        : articles.value
 
   const tabs = [
     { id: 'articles', label: '생각', href: '/?tab=articles' },
-    { id: 'translations', label: '한국어 번역본', href: '/?tab=translations' },
+    { id: 'tech', label: '기술', href: '/?tab=tech' },
+    { id: 'translations', label: '한국어 번역', href: '/?tab=translations' },
   ]
 
   return (
@@ -227,6 +248,14 @@ export default component$(() => {
       </header>
 
       <Tabs tabs={tabs}>
+        {activeTab === 'translations' && (
+          <div class="disclaimer-banner">
+            <p>
+              번역본에 대한 모든 권리는 원문 저자에게 있습니다. 저자의 요청이
+              있을 경우 해당 게시글은 언제든지 삭제될 수 있습니다.
+            </p>
+          </div>
+        )}
         <ArticleList articles={currentArticles} />
       </Tabs>
     </div>
