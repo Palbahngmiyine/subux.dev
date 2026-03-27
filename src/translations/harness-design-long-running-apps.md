@@ -9,7 +9,7 @@ Harness 설계는 에이전트 코딩의 최전선에서 성능을 좌우하는 
 
 _이 글은 Anthropic [Labs](https://www.anthropic.com/news/introducing-anthropic-labs) 팀의 Prithvi Rajasekaran이 작성했습니다._
 
-지난 몇 달 동안 저는 서로 맞물린 두 가지 문제를 다뤄왔습니다. 하나는 Claude가 고품질 프런트엔드 디자인을 만들게 하는 일이고, 다른 하나는 사람 개입 없이 완전한 애플리케이션을 구축하게 하는 일입니다. 이 작업은 이전에 진행했던 [frontend design skill](https://github.com/anthropics/claude-code/blob/main/plugins/frontend-design/skills/frontend-design/SKILL.md)과 [long-running coding agent harness](https://www.anthropic.com/engineering/effective-harnesses-for-long-running-agents) 작업에서 출발했습니다. 동료들과 저는 프롬프트 엔지니어링과 harness 설계를 통해 Claude 성능을 기준선보다 훨씬 끌어올렸지만, 두 접근 모두 결국에는 한계에 부딪혔습니다.
+지난 몇 달 동안 저는 서로 맞물린 두 가지 문제를 다뤄왔습니다. 하나는 Claude가 고품질 프런트엔드 디자인을 만들게 하는 일이고, 다른 하나는 사람 개입 없이 완전한 애플리케이션을 구축하게 하는 일입니다. 이 작업은 이전에 진행했던 [frontend design skill](https://github.com/anthropics/claude-code/blob/main/plugins/frontend-design/skills/frontend-design/SKILL.md)과 [long-running coding agent harness](https://www.anthropic.com/engineering/effective-harnesses-for-long-running-agents) 작업[^1]에서 출발했습니다. 동료들과 저는 프롬프트 엔지니어링과 harness 설계를 통해 Claude 성능을 기준선보다 훨씬 끌어올렸지만, 두 접근 모두 결국에는 한계에 부딪혔습니다.
 
 돌파구를 찾기 위해 저는 성격이 꽤 다른 두 영역, 즉 주관적 취향이 중요한 영역과 검증 가능한 정확성 및 사용성이 중요한 영역 모두에 통하는 새로운 AI 엔지니어링 접근을 찾았습니다. [Generative Adversarial Networks](https://en.wikipedia.org/wiki/Generative_adversarial_network) (GANs)에서 영감을 얻어 `generator` agent와 `evaluator` agent로 구성된 멀티 에이전트 구조를 설계했습니다. 출력물을 신뢰할 수 있게, 그리고 어느 정도의 미감까지 반영해 채점하는 evaluator를 만들려면 먼저 "이 디자인이 좋은가?" 같은 주관적 판단을 구체적으로 채점 가능한 기준으로 바꾸는 작업이 필요했습니다.
 
@@ -17,11 +17,11 @@ _이 글은 Anthropic [Labs](https://www.anthropic.com/news/introducing-anthropi
 
 ## Why naive implementations fall short
 
-Anthropic은 이전에도 harness 설계가 장시간 실행되는 에이전트 코딩의 효과를 크게 좌우한다는 점을 보여준 적이 있습니다. 앞선 [실험](https://www.anthropic.com/engineering/effective-harnesses-for-long-running-agents)에서는 initializer agent가 제품 명세를 작업 목록으로 분해하고, coding agent가 한 번에 하나의 기능을 구현한 뒤 세션 사이에 context를 넘길 산출물을 남기도록 했습니다. 더 넓은 개발자 커뮤니티도 비슷한 통찰에 수렴해왔고, 예를 들어 hook이나 script를 써서 agent를 계속 반복 루프에 묶어두는 "[Ralph Wiggum](https://ghuntley.com/ralph/)" 같은 접근도 등장했습니다.
+Anthropic은 이전에도 harness 설계가 장시간 실행되는 에이전트 코딩의 효과를 크게 좌우한다는 점을 보여준 적이 있습니다. 앞선 [실험](https://www.anthropic.com/engineering/effective-harnesses-for-long-running-agents)[^1]에서는 initializer agent가 제품 명세를 작업 목록으로 분해하고, coding agent가 한 번에 하나의 기능을 구현한 뒤 세션 사이에 context를 넘길 산출물을 남기도록 했습니다. 더 넓은 개발자 커뮤니티도 비슷한 통찰에 수렴해왔고, 예를 들어 hook이나 script를 써서 agent를 계속 반복 루프에 묶어두는 "[Ralph Wiggum](https://ghuntley.com/ralph/)" 같은 접근도 등장했습니다.
 
 하지만 몇몇 문제는 계속 남아 있었습니다. 더 복잡한 작업일수록 agent는 시간이 지나며 여전히 궤도를 이탈하는 경향이 있었습니다. 이 문제를 분해해보는 과정에서, 이런 종류의 작업을 수행하는 agent에게서 공통적으로 나타나는 두 가지 실패 모드를 관찰했습니다.
 
-첫 번째는 긴 작업을 진행하면서 context window가 차오를수록 모델이 일관성을 잃는다는 점입니다. 자세한 내용은 [context engineering](https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents) 글에서 다뤘습니다. 일부 모델은 `"context anxiety"`도 보였는데, 자신이 생각하는 context 한계에 가까워질수록 작업을 너무 일찍 마무리하려는 경향입니다. context window를 완전히 비우고 새 agent를 시작하되, 이전 agent의 상태와 다음 단계가 담긴 구조화된 handoff를 함께 넘기는 `context reset`은 이 두 문제를 동시에 해결해줍니다.
+첫 번째는 긴 작업을 진행하면서 context window가 차오를수록 모델이 일관성을 잃는다는 점입니다. 자세한 내용은 [context engineering](https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents) 글[^2]에서 다뤘습니다. 일부 모델은 `"context anxiety"`도 보였는데, 자신이 생각하는 context 한계에 가까워질수록 작업을 너무 일찍 마무리하려는 경향입니다. context window를 완전히 비우고 새 agent를 시작하되, 이전 agent의 상태와 다음 단계가 담긴 구조화된 handoff를 함께 넘기는 `context reset`은 이 두 문제를 동시에 해결해줍니다.
 
 이 방식은 `compaction`과는 다릅니다. compaction은 대화의 앞부분을 제자리에서 요약해 같은 agent가 더 짧아진 history를 바탕으로 계속 일하게 만드는 방법입니다. compaction은 연속성을 보존하지만, agent에게 깨끗한 출발점을 주지는 못합니다. 그래서 context anxiety가 계속 남을 수 있습니다. 반면 reset은 깨끗한 출발점을 주는 대신, 다음 agent가 작업을 무리 없이 이어받을 만큼 충분한 상태 정보가 handoff 산출물에 담겨 있어야 합니다. 이전 실험에서 Anthropic은 Claude Sonnet 4.5가 context anxiety를 꽤 강하게 보여, compaction만으로는 장기 작업 성능을 충분히 끌어낼 수 없다는 점을 확인했습니다. 그래서 context reset이 하니스 설계의 필수 요소가 됐습니다. 이 방식은 핵심 문제는 해결하지만, 그 대신 오케스트레이션 복잡도와 토큰 오버헤드, 그리고 실행 지연이 늘어납니다.
 
@@ -62,7 +62,7 @@ criterion의 문구는 제가 완전히 예상하지 못한 방식으로 generat
 
 ### The architecture
 
-이전 [long-running harness](https://www.anthropic.com/engineering/effective-harnesses-for-long-running-agents)에서는 initializer agent, 한 번에 하나의 기능만 처리하는 coding agent, 그리고 세션 사이의 context reset을 조합해 여러 세션에 걸친 코딩 일관성을 확보했습니다. context reset은 핵심적인 전환점이었습니다. 당시 harness는 Sonnet 4.5를 사용했고, 앞서 말한 `"context anxiety"` 성향을 보였기 때문입니다. context reset이 있어야 모델이 작업에 계속 집중할 수 있었습니다. 그런데 Opus 4.5에서는 그런 행동이 상당 부분 사라져, 이번 harness에서는 context reset을 완전히 제거할 수 있었습니다. agent들은 빌드 전체를 하나의 연속 세션으로 수행했고, [Claude Agent SDK](https://platform.claude.com/docs/en/agent-sdk/overview)의 자동 compaction이 그 과정에서 늘어나는 context를 관리했습니다.
+이전 [long-running harness](https://www.anthropic.com/engineering/effective-harnesses-for-long-running-agents)[^1]에서는 initializer agent, 한 번에 하나의 기능만 처리하는 coding agent, 그리고 세션 사이의 context reset을 조합해 여러 세션에 걸친 코딩 일관성을 확보했습니다. context reset은 핵심적인 전환점이었습니다. 당시 harness는 Sonnet 4.5를 사용했고, 앞서 말한 `"context anxiety"` 성향을 보였기 때문입니다. context reset이 있어야 모델이 작업에 계속 집중할 수 있었습니다. 그런데 Opus 4.5에서는 그런 행동이 상당 부분 사라져, 이번 harness에서는 context reset을 완전히 제거할 수 있었습니다. agent들은 빌드 전체를 하나의 연속 세션으로 수행했고, [Claude Agent SDK](https://platform.claude.com/docs/en/agent-sdk/overview)의 자동 compaction이 그 과정에서 늘어나는 context를 관리했습니다.
 
 이번 작업에서는 원래 harness의 토대 위에 3-agent 시스템을 쌓았고, 각 agent는 이전 실행에서 보였던 특정한 공백을 메우도록 설계했습니다. 시스템에는 아래 세 가지 agent persona가 있었습니다.
 
@@ -263,3 +263,7 @@ RetroForge는 레트로 게임 미학을 좋아하지만 현대적 편의성도 
 
 ...
 ```
+
+[^1]: 이 글은 이미 한국어로 번역해 두었습니다. [장시간 실행 에이전트를 위한 효과적인 harness](/effective-harnesses-for-long-running-agents)에서 읽을 수 있습니다.
+
+[^2]: 이 글도 한국어 번역본이 있습니다. [AI 에이전트를 위한 효과적인 컨텍스트 엔지니어링](/effective-context-engineering-for-ai-agents)에서 이어서 읽어보세요.

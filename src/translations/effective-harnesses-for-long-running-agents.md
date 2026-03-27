@@ -1,6 +1,6 @@
 ---
 title: Effective harnesses for long-running agents
-date: 2026-03-27
+date: 2026-03-26
 ---
 
 - 원문은 [Anthropic의 원 글](https://www.anthropic.com/engineering/effective-harnesses-for-long-running-agents)을 확인해주세요.
