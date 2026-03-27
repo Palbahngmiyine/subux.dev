@@ -1,0 +1,6 @@
+interface:
+  display_name: '한국어 번역 QA'
+  short_description: '영한 번역의 의미 보존과 문장 품질을 체계적으로 점검'
+  default_prompt: 'Use $ko-translation-qa to compare an English source with a
+    Korean translation and report meaning drift, overtranslation, typos, and
+    precise fixes.'

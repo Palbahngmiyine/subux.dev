@@ -67,7 +67,7 @@ Anthropic은 [Writing tools for AI agents – with AI agents](https://www.anthro
 
 현장에서 자주 보는 실패 모드는 기능 범위가 너무 넓거나, 어떤 상황에서 어떤 tool을 써야 하는지 판단이 모호한 비대한 tool 세트입니다. 인간 엔지니어조차 특정 상황에서 어떤 tool을 써야 하는지 단정하지 못한다면, AI agent에게 더 나은 판단을 기대하기는 어렵습니다. 뒤에서 다루듯, 최소한의 실행 가능 tool 세트를 유지하면 장기 상호작용에서 context 유지/가지치기의 신뢰성도 좋아집니다.
 
-few-shot prompting으로 알려진 예시 제공은 지금도 매우 효과적인 모범 사례입니다. 다만 팀이 task별 규칙을 빠짐없이 담겠다고 edge case를 장황하게 나열하는 경우가 많고, Anthropic은 이를 권장하지 않습니다. 대신 agent의 기대 동작을 효과적으로 보여주는, 다양하면서도 정전(canonical)적인 예시 세트를 큐레이션하는 것이 좋습니다.
+few-shot prompting으로 알려진 예시 제공은 지금도 매우 효과적인 모범 사례입니다. 다만 팀이 task별 규칙을 빠짐없이 담겠다고 edge case를 장황하게 나열하는 경우가 많고, Anthropic은 이를 권장하지 않습니다. 대신 agent의 기대 동작을 효과적으로 보여주는, 다양하면서도 대표성이 있는 예시 세트를 큐레이션하는 것이 좋습니다.
 
 LLM에게 예시는 “천 마디 말보다 강한 그림”입니다.
 
@@ -156,6 +156,8 @@ sub-agent architecture는 context 한계를 우회하는 또 다른 방법입니
 context engineering은 LLM 기반 시스템을 구축하는 방식 자체를 바꾸는 근본적 전환입니다. 모델이 강력해질수록 과제는 “완벽한 prompt 작성”에만 있지 않습니다. 매 단계마다 모델의 제한된 attention budget에 어떤 정보를 넣을지 세심하게 큐레이션하는 일이 더 중요해집니다.
 
 long-horizon task를 위한 compaction을 구현하든, token 효율적인 tool을 설계하든, agent가 환경을 just-in-time으로 탐색하게 하든, 원칙은 같습니다. 원하는 결과가 나올 가능성을 최대화하는 고신호 token의 최소 집합을 찾아야 합니다.
+
+이 글에서 소개한 기법은 모델이 발전함에 따라 계속 진화할 것입니다. 이미 더 똑똑한 모델일수록 덜 규정적인 엔지니어링만으로도 agent가 더 큰 자율성을 발휘할 수 있다는 점이 드러나고 있습니다. 하지만 역량이 계속 확장되더라도, context를 소중하고 유한한 자원으로 다루는 일은 신뢰할 수 있고 효과적인 agent를 만드는 핵심으로 남을 것입니다.
 
 지금 Claude Developer Platform에서 context engineering을 시작해보고, [memory and context management cookbook](https://platform.claude.com/cookbook/tool-use-memory-cookbook)에서 실전 팁과 모범 사례를 확인해보세요.
 
