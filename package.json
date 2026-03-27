@@ -40,10 +40,10 @@
     "@types/node": "^25.5.0",
     "ignore": "^7.0.5",
     "tailwindcss": "^4.2.2",
-    "typescript": "^5.9.3",
-    "vite": "npm:@voidzero-dev/vite-plus-core@^0.1.13",
+    "typescript": "^6.0.2",
+    "vite": "npm:@voidzero-dev/vite-plus-core@^0.1.14",
     "vite-plus": "latest",
-    "wrangler": "^4.76.0"
+    "wrangler": "^4.77.0"
   },
   "engines": {
     "node": ">=20.0.0"
