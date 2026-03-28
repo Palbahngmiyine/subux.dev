@@ -379,6 +379,15 @@ a.tab-link[aria-current='page'] {
   margin-bottom: var(--space-3);
 }
 
+.article-content .article-video {
+  display: block;
+  width: 100%;
+  margin: var(--space-4) 0;
+  border-radius: var(--radius-md);
+  background: #000;
+  box-shadow: var(--shadow-sm);
+}
+
 .callout {
   border-left: 3px solid var(--color-border);
   padding: var(--space-2) var(--space-3);

@@ -12,6 +12,7 @@ import { unified } from 'unified'
 import { NotFound } from '~/components/not-found'
 import { parseMarkdown } from '~/lib/markdown'
 import rehypeFootnoteTooltip from '~/lib/rehype-footnote-tooltip'
+import { remarkVideoDirective } from '~/lib/remark-video-directive'
 
 type MarkdownCollection = {
   baseFolder: 'articles' | 'tech' | 'translations'
@@ -146,6 +147,7 @@ export const useArticleData = routeLoader$<ArticleData>(
         .use(remarkParse)
         .use(remarkGfm)
         .use(remarkDirective)
+        .use(remarkVideoDirective)
         .use(remarkWikiLink, {
           pageResolver: (name: string) => [
             name.replace(/ /g, '-').toLowerCase(),
