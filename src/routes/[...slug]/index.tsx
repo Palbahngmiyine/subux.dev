@@ -1,6 +1,6 @@
 import { component$ } from '@builder.io/qwik'
 import type { DocumentHead } from '@builder.io/qwik-city'
-import { routeLoader$ } from '@builder.io/qwik-city'
+import { Link, routeLoader$ } from '@builder.io/qwik-city'
 import rehypeStringify from 'rehype-stringify'
 import remarkDirective from 'remark-directive'
 import remarkGfm from 'remark-gfm'
@@ -71,11 +71,107 @@ const formatKoreanDate = (dateValue: unknown): string | null => {
   return `${year}년 ${month}월 ${day}일`
 }
 
+interface SeriesItem {
+  slug: string
+  title: string
+  isCurrent: boolean
+}
+
+interface SeriesInfo {
+  name: string
+  items: SeriesItem[]
+}
+
+const computeSlugFromKey = (key: string, baseFolder: string): string => {
+  const normalized = key.replace(/\\/g, '/')
+  const afterBase = normalized.split(`${baseFolder}/`).pop() || normalized
+
+  if (INDEX_CANDIDATES.some((name) => afterBase.endsWith(`/${name}`))) {
+    return afterBase.split('/').slice(0, -1).join('/')
+  }
+
+  return afterBase.replace(/\.(md|mdx)$/i, '')
+}
+
+const toTimestamp = (dateValue: unknown): number => {
+  if (dateValue instanceof Date) return dateValue.getTime()
+  if (typeof dateValue === 'string' || typeof dateValue === 'number') {
+    const parsed = new Date(dateValue).getTime()
+    if (!Number.isNaN(parsed)) return parsed
+  }
+  return Number.MAX_SAFE_INTEGER
+}
+
+const buildSeriesInfo = (
+  seriesName: string,
+  currentKey: string,
+  collections: MarkdownCollection[],
+): SeriesInfo | null => {
+  const items: (SeriesItem & { order: number | null; date: number })[] = []
+  const seenSlugs = new Set<string>()
+
+  for (const collection of collections) {
+    for (const [key, raw] of Object.entries(collection.modules)) {
+      let data: Record<string, unknown>
+      try {
+        data = parseMarkdown(raw).data as Record<string, unknown>
+      } catch {
+        continue
+      }
+
+      if (
+        typeof data.series !== 'string' ||
+        data.series.trim() !== seriesName
+      ) {
+        continue
+      }
+
+      const slug = computeSlugFromKey(key, collection.baseFolder)
+      if (seenSlugs.has(slug)) continue
+      seenSlugs.add(slug)
+
+      items.push({
+        slug,
+        title:
+          typeof data.title === 'string' && data.title.trim().length > 0
+            ? data.title
+            : slug,
+        isCurrent: key === currentKey,
+        order:
+          typeof data.seriesOrder === 'number' &&
+          Number.isFinite(data.seriesOrder)
+            ? data.seriesOrder
+            : null,
+        date: toTimestamp(data.date),
+      })
+    }
+  }
+
+  if (items.length < 2) return null
+
+  items.sort((a, b) => {
+    if (a.order !== null && b.order !== null) return a.order - b.order
+    if (a.order !== null) return -1
+    if (b.order !== null) return 1
+    return a.date - b.date
+  })
+
+  return {
+    name: seriesName,
+    items: items.map(({ slug, title, isCurrent }) => ({
+      slug,
+      title,
+      isCurrent,
+    })),
+  }
+}
+
 interface ArticleData {
   content: string
   frontmatter: Record<string, unknown>
   title: string
   formattedDate: string | null
+  series: SeriesInfo | null
   isNotFound: boolean
 }
 
@@ -94,6 +190,7 @@ export const useArticleData = routeLoader$<ArticleData>(
         frontmatter: {},
         title: 'Not Found',
         formattedDate: null,
+        series: null,
         isNotFound: true,
       }
     }
@@ -135,6 +232,7 @@ export const useArticleData = routeLoader$<ArticleData>(
           frontmatter: {},
           title: 'Not Found',
           formattedDate: null,
+          series: null,
           isNotFound: true,
         }
       }
@@ -167,11 +265,17 @@ export const useArticleData = routeLoader$<ArticleData>(
           ? fm.title
           : (parts[parts.length - 1] ?? 'Article')
 
+      const seriesName = typeof fm.series === 'string' ? fm.series.trim() : ''
+      const series = seriesName
+        ? buildSeriesInfo(seriesName, matchedEntry.key, collections)
+        : null
+
       return {
         content: result.toString(),
         frontmatter: fm,
         title,
         formattedDate: formatKoreanDate(fm.date),
+        series,
         isNotFound: false,
       }
     } catch {
@@ -181,6 +285,7 @@ export const useArticleData = routeLoader$<ArticleData>(
         frontmatter: {},
         title: 'Not Found',
         formattedDate: null,
+        series: null,
         isNotFound: true,
       }
     }
@@ -208,6 +313,28 @@ export default component$(() => {
             <time>{articleData.value.formattedDate}</time>
           )}
         </header>
+        {articleData.value.series && (
+          <aside class="series-nav-box" aria-label="시리즈 목차">
+            <p class="series-nav-label">
+              시리즈 · {articleData.value.series.name}
+            </p>
+            <ol class="series-nav-list">
+              {articleData.value.series.items.map((item) => (
+                <li key={item.slug}>
+                  {item.isCurrent ? (
+                    <span class="series-nav-current" aria-current="page">
+                      {item.title}
+                    </span>
+                  ) : (
+                    <Link href={`/${item.slug}`} class="series-nav-link">
+                      {item.title}
+                    </Link>
+                  )}
+                </li>
+              ))}
+            </ol>
+          </aside>
+        )}
         <div
           class="article-content"
           dangerouslySetInnerHTML={articleData.value.content}
