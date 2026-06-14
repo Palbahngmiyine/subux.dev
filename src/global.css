@@ -639,6 +639,76 @@ code {
 pre code {
   background: none;
   padding: 0;
+  color: #24292f;
+}
+
+pre code.hljs {
+  display: block;
+}
+
+.hljs-comment,
+.hljs-quote {
+  color: #6a737d;
+  font-style: italic;
+}
+
+.hljs-keyword,
+.hljs-selector-tag,
+.hljs-subst {
+  color: #cf222e;
+}
+
+.hljs-number,
+.hljs-literal,
+.hljs-variable,
+.hljs-template-variable,
+.hljs-attr,
+.hljs-attribute {
+  color: #0550ae;
+}
+
+.hljs-string,
+.hljs-doctag,
+.hljs-regexp {
+  color: #0a7f5a;
+}
+
+.hljs-title,
+.hljs-section,
+.hljs-selector-id {
+  color: #8250df;
+  font-weight: 600;
+}
+
+.hljs-type,
+.hljs-class .hljs-title {
+  color: #953800;
+}
+
+.hljs-name,
+.hljs-tag {
+  color: #116329;
+}
+
+.hljs-built_in,
+.hljs-bullet,
+.hljs-code {
+  color: #b35900;
+}
+
+.hljs-meta,
+.hljs-symbol {
+  color: #0550ae;
+}
+
+.hljs-deletion {
+  color: #82071e;
+  background-color: #ffebe9;
+}
+
+.hljs-addition {
+  color: #116329;
+  background-color: #dafbe1;
 }
 
 .footnotes {

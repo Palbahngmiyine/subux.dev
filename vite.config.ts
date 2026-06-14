@@ -1,11 +1,13 @@
 import { qwikVite } from '@builder.io/qwik/optimizer'
 import { qwikCity } from '@builder.io/qwik-city/vite'
 import tailwindcss from '@tailwindcss/vite'
+import rehypeHighlight from 'rehype-highlight'
 import remarkDirective from 'remark-directive'
 import remarkGfm from 'remark-gfm'
 import remarkObsidianCallout from 'remark-obsidian-callout'
 import remarkWikiLink from 'remark-wiki-link'
 import { defineConfig } from 'vite-plus'
+import { rehypeSyntaxHighlightOptions } from './src/lib/rehype-syntax-highlight'
 
 export default defineConfig({
   plugins: [
@@ -27,7 +29,7 @@ export default defineConfig({
           ],
           remarkObsidianCallout,
         ],
-        rehypePlugins: [],
+        rehypePlugins: [[rehypeHighlight, rehypeSyntaxHighlightOptions]],
       },
     }),
     qwikVite(),
@@ -47,6 +49,7 @@ export default defineConfig({
       'remark-wiki-link',
       'remark-obsidian-callout',
       'remark-rehype',
+      'rehype-highlight',
       'rehype-stringify',
     ],
     noExternal: [],

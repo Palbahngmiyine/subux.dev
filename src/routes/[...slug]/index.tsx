@@ -1,6 +1,7 @@
 import { component$ } from '@builder.io/qwik'
 import type { DocumentHead } from '@builder.io/qwik-city'
 import { Link, routeLoader$ } from '@builder.io/qwik-city'
+import rehypeHighlight from 'rehype-highlight'
 import rehypeStringify from 'rehype-stringify'
 import remarkDirective from 'remark-directive'
 import remarkGfm from 'remark-gfm'
@@ -12,6 +13,7 @@ import { unified } from 'unified'
 import { NotFound } from '~/components/not-found'
 import { parseMarkdown } from '~/lib/markdown'
 import rehypeFootnoteTooltip from '~/lib/rehype-footnote-tooltip'
+import { rehypeSyntaxHighlightOptions } from '~/lib/rehype-syntax-highlight'
 import { remarkVideoDirective } from '~/lib/remark-video-directive'
 
 type MarkdownCollection = {
@@ -255,6 +257,7 @@ export const useArticleData = routeLoader$<ArticleData>(
         })
         .use(remarkObsidianCallout)
         .use(remarkRehype)
+        .use(rehypeHighlight, rehypeSyntaxHighlightOptions)
         .use(rehypeFootnoteTooltip)
         .use(rehypeStringify)
 
