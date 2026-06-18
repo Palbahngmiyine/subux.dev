@@ -646,6 +646,24 @@ pre code.hljs {
   display: block;
 }
 
+.article-content .mermaid {
+  display: block;
+  width: 100%;
+  margin: var(--space-4) 0;
+  padding: var(--space-3);
+  overflow-x: auto;
+  background: #f8fafc;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+}
+
+.article-content .mermaid svg {
+  display: block;
+  max-width: none;
+  height: auto;
+  margin: 0 auto;
+}
+
 .hljs-comment,
 .hljs-quote {
   color: #6a737d;

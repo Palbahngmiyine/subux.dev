@@ -5,5 +5,5 @@ export const rehypeSyntaxHighlightOptions = {
     bash: ['sh', 'shell', 'zsh'],
     yaml: ['yml'],
   },
-  plainText: ['text', 'txt', 'plain'],
+  plainText: ['text', 'txt', 'plain', 'mermaid', 'mmd'],
 } satisfies RehypeHighlightOptions

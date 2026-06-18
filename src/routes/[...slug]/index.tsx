@@ -1,4 +1,4 @@
-import { component$ } from '@builder.io/qwik'
+import { component$, useVisibleTask$ } from '@builder.io/qwik'
 import type { DocumentHead } from '@builder.io/qwik-city'
 import { Link, routeLoader$ } from '@builder.io/qwik-city'
 import rehypeHighlight from 'rehype-highlight'
@@ -297,6 +297,71 @@ export const useArticleData = routeLoader$<ArticleData>(
 
 export default component$(() => {
   const articleData = useArticleData()
+
+  // Mermaid diagrams are authored as fenced Markdown code blocks and rendered
+  // after the article HTML is visible in the browser.
+  // eslint-disable-next-line qwik/no-use-visible-task
+  useVisibleTask$(async ({ track }) => {
+    track(() => articleData.value.content)
+
+    const article = document.querySelector('.article-content')
+    if (!article) return
+
+    const blocks = Array.from(
+      article.querySelectorAll<HTMLElement>('pre > code.language-mermaid'),
+    )
+    if (blocks.length === 0) return
+
+    const { default: mermaid } = await import('mermaid')
+
+    mermaid.initialize({
+      startOnLoad: false,
+      securityLevel: 'strict',
+      theme: 'base',
+      themeVariables: {
+        background: '#ffffff',
+        primaryColor: '#eff6ff',
+        primaryBorderColor: '#2563eb',
+        primaryTextColor: '#0f172a',
+        secondaryColor: '#ecfdf5',
+        secondaryBorderColor: '#059669',
+        tertiaryColor: '#fff7ed',
+        tertiaryBorderColor: '#f97316',
+        lineColor: '#2563eb',
+        fontFamily:
+          'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
+      },
+    })
+
+    const nodes: HTMLElement[] = []
+    for (const block of blocks) {
+      const pre = block.parentElement
+      if (!pre || pre.dataset.mermaidProcessed === 'true') continue
+
+      const diagram = document.createElement('div')
+      diagram.className = 'mermaid'
+      diagram.textContent = block.textContent ?? ''
+      pre.dataset.mermaidProcessed = 'true'
+      pre.replaceWith(diagram)
+      nodes.push(diagram)
+    }
+
+    if (nodes.length > 0) {
+      await mermaid.run({ nodes })
+
+      for (const node of nodes) {
+        const svg = node.querySelector<SVGSVGElement>('svg')
+        const [, , width] = svg?.getAttribute('viewBox')?.split(/\s+/) ?? []
+        const intrinsicWidth = Number.parseFloat(width ?? '')
+
+        if (svg && Number.isFinite(intrinsicWidth) && intrinsicWidth > 0) {
+          // Keep diagrams readable on narrow screens; the container handles overflow.
+          svg.setAttribute('width', String(Math.ceil(intrinsicWidth)))
+          svg.style.maxWidth = 'none'
+        }
+      }
+    }
+  })
 
   if (articleData.value.isNotFound) {
     return <NotFound />
