@@ -15,6 +15,8 @@ type Article = {
   filename: string
   date: string | null
   dateObj: Date | null
+  series: string | null
+  seriesOrder: number | null
 }
 
 const INDEX_CANDIDATES = ['@index.md', '@index.mdx', 'index.md', 'index.mdx']
@@ -65,6 +67,43 @@ const parseDate = (
   return { formatted, dateObj: date }
 }
 
+const parseSeriesOrder = (value: unknown): number | null => {
+  if (typeof value === 'number' && Number.isFinite(value)) return value
+  if (typeof value === 'string') {
+    const parsed = Number(value)
+    if (Number.isFinite(parsed)) return parsed
+  }
+  return null
+}
+
+const compareArticles = (a: Article, b: Article): number => {
+  if (!a.dateObj && !b.dateObj) return compareArticleFallback(a, b)
+  if (!a.dateObj) return 1
+  if (!b.dateObj) return -1
+
+  const dateCompare = b.dateObj.getTime() - a.dateObj.getTime()
+  if (dateCompare !== 0) return dateCompare
+
+  if (
+    a.series &&
+    b.series &&
+    a.series === b.series &&
+    a.seriesOrder !== null &&
+    b.seriesOrder !== null &&
+    a.seriesOrder !== b.seriesOrder
+  ) {
+    return b.seriesOrder - a.seriesOrder
+  }
+
+  return compareArticleFallback(a, b)
+}
+
+const compareArticleFallback = (a: Article, b: Article): number => {
+  const titleCompare = a.title.localeCompare(b.title, 'ko')
+  if (titleCompare !== 0) return titleCompare
+  return a.filename.localeCompare(b.filename)
+}
+
 const loadArticlesFromGlob = (
   modules: Record<string, string>,
   baseFolder: string,
@@ -83,18 +122,19 @@ const loadArticlesFromGlob = (
         filename,
         date: formatted,
         dateObj,
+        series:
+          typeof frontmatter.series === 'string' &&
+          frontmatter.series.trim().length > 0
+            ? frontmatter.series.trim()
+            : null,
+        seriesOrder: parseSeriesOrder(frontmatter.seriesOrder),
       })
     } catch (error) {
       console.error('Error processing file:', key, error)
     }
   }
 
-  articles.sort((a, b) => {
-    if (!a.dateObj && !b.dateObj) return 0
-    if (!a.dateObj) return 1
-    if (!b.dateObj) return -1
-    return b.dateObj.getTime() - a.dateObj.getTime()
-  })
+  articles.sort(compareArticles)
 
   return articles
 }

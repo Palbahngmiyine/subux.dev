@@ -1,6 +1,9 @@
 ---
-title: Kubernetes Pod 네트워킹 이해하기 1부: Pod, Service, DNS
+title: "Kubernetes Pod 네트워킹 이해하기 1부: Pod, Service, DNS"
+description: "Pod 안의 localhost 통신부터 Service, DNS, ClusterIP, EndpointSlice, kube-proxy 흐름까지 Kubernetes Pod 네트워킹의 기본 경로를 정리합니다."
 date: 2026-06-18
+series: "Kubernetes Pod 네트워킹 이해하기"
+seriesOrder: 1
 ---
 
 최근 쿠버네티스 동작 원리에 대해 이야기를 할 기회가 있었는데, 쿠버네티스 자체에
@@ -598,7 +601,7 @@ kube-proxy 또는 대체 dataplane이 선언한 규칙을 실제 네트워크 �
 그 요청이 실제 backend Pod까지 도달하는 경로를 끝까지 설명할 수 있습니다. 다만
 아직 한 단계 더 아래의 질문이 남아 있습니다. Pod IP는 노드 위에서 어떻게 붙고,
 다른 노드에 있는 Pod까지 가는 경로는 어떻게 만들어질까요? 그 부분은 CNI가 맡는
-영역이므로, 2부에서는 CNI가 이 Pod 네트워크 모델을 어떻게 구현하는지 살펴보겠습니다.
+영역이므로, [2부](/2026/KUBERNETES-POD-NETWORKING-PART-2)에서는 CNI가 이 Pod 네트워크 모델을 어떻게 구현하는지 살펴보겠습니다.
 
 ## 참고 자료
 
