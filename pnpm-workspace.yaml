@@ -1,3 +1,29 @@
+allowBuilds:
+  workerd: true
+  sharp: true
+  esbuild: true
+minimumReleaseAgeExclude:
+  - miniflare@5.20261006.1-alpha
+  - wrangler@4.149.0
 overrides:
-  mdast-util-to-hast@>=13.0.0 <13.2.1: '>=13.2.1'
-  valibot@>=0.31.0 <1.2.0: '>=1.2.0'
+  vite: npm:@voidzero-dev/vite-plus-core@1.1.0
+  # Security fixes for versions retained by upstream dependency ranges.
+  'shell-quote@<1.11.0': 1.12.0
+  'postcss@<8.5.23': 8.5.29
+  'source-map-js@<1.2.2': 1.2.2
+  'valibot@<1.4.2': 1.5.0
+  # Preserve Azure adapter's CommonJS require("uuid").v4 API.
+  '@azure/functions@3.5.1>uuid': 11.1.1
+  # Imagetools 9 transforms were checked with sharp 0.35.5.
+  'vite-imagetools@10.0.0>sharp': 0.35.5
+  # Mermaid uses the stable renderToString API with native MathML output.
+  'mermaid@12.1.0>katex': 0.19.0
+# Vite+ 1.1.0 bundles Vite 8.3.3; its package version differs from Vite's.
+peerDependencyRules:
+  allowedVersions:
+    '@qwik.dev/core>vite': '1.1.0'
+    '@qwik.dev/router>vite': '1.1.0'
+    '@tailwindcss/vite>vite': '1.1.0'
+    'vite-imagetools>vite': '1.1.0'
+    '@vitest/mocker>vite': '1.1.0'
+    'vitest>vite': '1.1.0'

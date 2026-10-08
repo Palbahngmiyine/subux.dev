@@ -1,11 +1,10 @@
-import { component$, useVisibleTask$ } from '@builder.io/qwik'
-import type { DocumentHead } from '@builder.io/qwik-city'
-import { Link, routeLoader$ } from '@builder.io/qwik-city'
+import { component$, useVisibleTask$ } from '@qwik.dev/core'
+import type { DocumentHead } from '@qwik.dev/router'
+import { Link, routeLoader$, useLocation } from '@qwik.dev/router'
 import rehypeHighlight from 'rehype-highlight'
 import rehypeStringify from 'rehype-stringify'
 import remarkDirective from 'remark-directive'
 import remarkGfm from 'remark-gfm'
-import remarkObsidianCallout from 'remark-obsidian-callout'
 import remarkParse from 'remark-parse'
 import remarkRehype from 'remark-rehype'
 import remarkWikiLink from 'remark-wiki-link'
@@ -13,8 +12,11 @@ import { unified } from 'unified'
 import { NotFound } from '~/components/not-found'
 import { parseMarkdown } from '~/lib/markdown'
 import rehypeFootnoteTooltip from '~/lib/rehype-footnote-tooltip'
+import { rehypeSafeUrls } from '~/lib/rehype-safe-urls'
 import { rehypeSyntaxHighlightOptions } from '~/lib/rehype-syntax-highlight'
 import { remarkVideoDirective } from '~/lib/remark-video-directive'
+import { remarkCallout } from '~/lib/remark-callout'
+import { wikiLinkOptions } from '~/lib/wiki-link'
 
 type MarkdownCollection = {
   baseFolder: 'articles' | 'tech' | 'translations'
@@ -248,17 +250,12 @@ export const useArticleData = routeLoader$<ArticleData>(
         .use(remarkGfm)
         .use(remarkDirective)
         .use(remarkVideoDirective)
-        .use(remarkWikiLink, {
-          pageResolver: (name: string) => [
-            name.replace(/ /g, '-').toLowerCase(),
-          ],
-          hrefTemplate: (permalink: string) => `/${permalink}`,
-          aliasDivider: '|',
-        })
-        .use(remarkObsidianCallout)
+        .use(remarkWikiLink, wikiLinkOptions)
+        .use(remarkCallout)
         .use(remarkRehype)
         .use(rehypeHighlight, rehypeSyntaxHighlightOptions)
         .use(rehypeFootnoteTooltip)
+        .use(rehypeSafeUrls)
         .use(rehypeStringify)
 
       const result = await processor.process(parsed.content)
@@ -297,12 +294,18 @@ export const useArticleData = routeLoader$<ArticleData>(
 
 export default component$(() => {
   const articleData = useArticleData()
+  const location = useLocation()
 
   // Mermaid diagrams are authored as fenced Markdown code blocks and rendered
   // after the article HTML is visible in the browser.
   // eslint-disable-next-line qwik/no-use-visible-task
-  useVisibleTask$(async ({ track }) => {
-    track(() => articleData.value.content)
+  useVisibleTask$(async ({ track, cleanup }) => {
+    // Observe navigation, not the async loader: its value may need to resume.
+    track(() => location.url.pathname)
+    let cancelled = false
+    cleanup(() => {
+      cancelled = true
+    })
 
     const article = document.querySelector('.article-content')
     if (!article) return
@@ -313,11 +316,14 @@ export default component$(() => {
     if (blocks.length === 0) return
 
     const { default: mermaid } = await import('mermaid')
+    if (cancelled || !article.isConnected) return
 
     mermaid.initialize({
       startOnLoad: false,
       securityLevel: 'strict',
       theme: 'base',
+      layout: 'dagre',
+      look: 'classic',
       themeVariables: {
         background: '#ffffff',
         primaryColor: '#eff6ff',

@@ -1,8 +1,8 @@
 ---
-title: "Kubernetes Pod 네트워킹 이해하기 2부: CNI와 NetworkPolicy"
-description: "1부에서 남긴 Pod IP와 노드 간 경로 질문을 CNI와 NetworkPolicy 관점에서 정리합니다."
+title: 'Kubernetes Pod 네트워킹 이해하기 2부: CNI와 NetworkPolicy'
+description: '1부에서 남긴 Pod IP와 노드 간 경로 질문을 CNI와 NetworkPolicy 관점에서 정리합니다.'
 date: 2026-07-05
-series: "Kubernetes Pod 네트워킹 이해하기"
+series: 'Kubernetes Pod 네트워킹 이해하기'
 seriesOrder: 2
 ---
 

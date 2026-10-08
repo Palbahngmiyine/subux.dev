@@ -1,10 +1,10 @@
-import { component$ } from '@builder.io/qwik'
+import { component$ } from '@qwik.dev/core'
 import {
   type DocumentHead,
   Link,
   routeLoader$,
   useLocation,
-} from '@builder.io/qwik-city'
+} from '@qwik.dev/router'
 import { Tabs } from '~/components/tabs'
 import { parseMarkdown } from '~/lib/markdown'
 

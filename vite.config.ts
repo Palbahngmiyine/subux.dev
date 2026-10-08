@@ -1,58 +1,20 @@
-import { qwikVite } from '@builder.io/qwik/optimizer'
-import { qwikCity } from '@builder.io/qwik-city/vite'
+import { qwikVite } from '@qwik.dev/core/optimizer'
+import { qwikRouter } from '@qwik.dev/router/vite'
 import tailwindcss from '@tailwindcss/vite'
-import rehypeHighlight from 'rehype-highlight'
-import remarkDirective from 'remark-directive'
-import remarkGfm from 'remark-gfm'
-import remarkObsidianCallout from 'remark-obsidian-callout'
-import remarkWikiLink from 'remark-wiki-link'
 import { defineConfig } from 'vite-plus'
-import { rehypeSyntaxHighlightOptions } from './src/lib/rehype-syntax-highlight'
 
 export default defineConfig({
-  plugins: [
-    tailwindcss(),
-    qwikCity({
-      mdx: {
-        remarkPlugins: [
-          remarkGfm,
-          remarkDirective,
-          [
-            remarkWikiLink,
-            {
-              pageResolver: (name: string) => [
-                name.replace(/ /g, '-').toLowerCase(),
-              ],
-              hrefTemplate: (permalink: string) => `/${permalink}`,
-              aliasDivider: '|',
-            },
-          ],
-          remarkObsidianCallout,
-        ],
-        rehypePlugins: [[rehypeHighlight, rehypeSyntaxHighlightOptions]],
-      },
-    }),
-    qwikVite(),
-  ],
+  plugins: [tailwindcss(), qwikRouter(), qwikVite()],
   resolve: {
     tsconfigPaths: true,
   },
-  ssr: {
-    external: [
-      'node:fs',
-      'node:path',
-      'gray-matter',
-      'unified',
-      'remark-parse',
-      'remark-gfm',
-      'remark-directive',
-      'remark-wiki-link',
-      'remark-obsidian-callout',
-      'remark-rehype',
-      'rehype-highlight',
-      'rehype-stringify',
-    ],
-    noExternal: [],
+  // Vite's dependency scanner transforms glob imports without tsconfig JSX settings.
+  optimizeDeps: {
+    rolldownOptions: {
+      transform: {
+        jsx: { importSource: '@qwik.dev/core' },
+      },
+    },
   },
   server: {
     headers: {

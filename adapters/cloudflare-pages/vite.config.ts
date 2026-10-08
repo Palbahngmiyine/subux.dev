@@ -1,52 +1,19 @@
-import { cloudflarePagesAdapter } from '@builder.io/qwik-city/adapters/cloudflare-pages/vite'
-import { extendConfig } from '@builder.io/qwik-city/vite'
+import { cloudflarePagesAdapter } from '@qwik.dev/router/adapters/cloudflare-pages/vite'
+import { extendConfig } from '@qwik.dev/router/vite'
 import baseConfig from '../../vite.config'
 
-export default extendConfig(baseConfig as any, () => {
-  return {
-    build: {
-      ssr: true,
-      rolldownOptions: {
-        input: ['src/entry.cloudflare-pages.tsx', '@qwik-city-plan'],
-        external: [
-          'node:fs',
-          'node:path',
-          'gray-matter',
-          'unified',
-          'remark-parse',
-          'remark-gfm',
-          'remark-directive',
-          'remark-wiki-link',
-          'remark-obsidian-callout',
-          'remark-rehype',
-          'rehype-highlight',
-          'rehype-stringify',
-        ],
-      },
+export default extendConfig(baseConfig, () => ({
+  build: {
+    ssr: true,
+    rolldownOptions: {
+      input: ['src/entry.cloudflare-pages.tsx'],
     },
+  },
+  // Worker SSR must select non-DOM exports in the Markdown pipeline.
+  ssr: {
     resolve: {
-      alias: {
-        path: 'node:path',
-        fs: 'node:fs',
-      },
+      conditions: ['workerd', 'worker', 'module', 'production'],
     },
-    ssr: {
-      external: [
-        'node:fs',
-        'node:path',
-        'gray-matter',
-        'unified',
-        'remark-parse',
-        'remark-gfm',
-        'remark-directive',
-        'remark-wiki-link',
-        'remark-obsidian-callout',
-        'remark-rehype',
-        'rehype-highlight',
-        'rehype-stringify',
-      ],
-      noExternal: [],
-    },
-    plugins: [cloudflarePagesAdapter()],
-  }
-})
+  },
+  plugins: [cloudflarePagesAdapter()],
+}))

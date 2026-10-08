@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-This is a personal blog/portfolio website (subux.dev) built with Qwik and deployed to Cloudflare Pages. The site renders markdown articles with frontmatter metadata and supports wiki-style links and Obsidian callouts.
+This is a personal blog/portfolio website (subux.dev) built with Qwik 2 and deployed to Cloudflare Pages. The site renders markdown articles with frontmatter metadata and supports wiki-style links and Obsidian callouts.
 
 ## Commands
 
@@ -28,10 +28,11 @@ This is a personal blog/portfolio website (subux.dev) built with Qwik and deploy
 - `pnpm fmt` - Format code with Oxfmt (via Vite+)
 - `pnpm fmt.check` - Check formatting without modifying
 - `pnpm check` - Run both lint and format checks
+- `pnpm test` - Run Markdown preservation and security tests with the Node test runner
 
 ### Deployment
 
-- `pnpm serve` - Test production build locally with Wrangler (requires nodejs_als compatibility flag)
+- `pnpm serve` - Test production build locally with Wrangler (uses the nodejs_compat flag in wrangler.toml)
 - `pnpm deploy` - Deploy to Cloudflare Pages
 
 ## Architecture
@@ -40,12 +41,14 @@ This is a personal blog/portfolio website (subux.dev) built with Qwik and deploy
 
 Articles are stored in `src/articles/` as Markdown/MDX files organized by year (e.g., `src/articles/2025/`). The content system uses:
 
-- **Frontmatter parsing**: `gray-matter` extracts metadata (title, description, date)
+- **Frontmatter parsing**: `yaml` extracts metadata (title, description, date); the local parser rejects executable languages and aliases
 - **Markdown processing pipeline**: unified + remark + rehype with plugins:
   - `remark-gfm` - GitHub Flavored Markdown
-  - `remark-wiki-link` - Wiki-style `[[links]]` (converts to URL-friendly slugs)
+  - `remark-wiki-link` - Wiki-style `[[links]]` (converts to internal URL-friendly slugs)
   - `remark-obsidian-callout` - Obsidian-style callout blocks
   - `remark-directive` - Generic directive syntax support
+- Local `remarkCallout` - Obsidian callout blocks without raw HTML
+- Local `rehypeSafeUrls` - Safe protocols for rendered links and media
 
 ### Routing
 
@@ -58,12 +61,9 @@ Articles are stored in `src/articles/` as Markdown/MDX files organized by year (
 
 ### SSR Configuration
 
-The app uses Vite + Qwik with SSR. Key external dependencies for SSR are marked in `vite.config.ts` and `adapters/cloudflare-pages/vite.config.ts`:
+The app uses Qwik 2 with Vite+ (Vite 8) and SSR. The Cloudflare adapter bundles the Markdown dependencies and selects Worker conditions with `ssr.resolve.conditions` so browser-only DOM exports do not enter the server bundle. The adapter manages the Node async-hooks external needed by Qwik.
 
-- Node builtins: `node:fs`, `node:path`
-- Markdown libs: `gray-matter`, `unified`, remark/rehype plugins
-
-These must stay external because they're processed server-side by Cloudflare Workers with Node.js compatibility.
+Qwik core/router are pinned together to 2.0.0-rc.2. Tests use `node --test`, not Qwik's optional Vitest integration.
 
 ### Deployment Target
 

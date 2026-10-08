@@ -48,3 +48,8 @@ functions/**/*.js
 
 # Kiro
 .kiro
+
+# Local validation artifacts
+/output/
+/.playwright-cli/
+/.wrangler/

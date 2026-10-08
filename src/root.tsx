@@ -1,17 +1,18 @@
-import { component$, isDev, useStyles$ } from '@builder.io/qwik'
+import { component$, isDev, useStyles$ } from '@qwik.dev/core'
 import {
-  QwikCityProvider,
+  useQwikRouter,
   RouterOutlet,
   ServiceWorkerRegister,
-} from '@builder.io/qwik-city'
+} from '@qwik.dev/router'
 import { RouterHead } from './components/router-head/router-head'
 import styles from './global.css?inline'
 
 export default component$(() => {
+  useQwikRouter()
   useStyles$(styles)
 
   return (
-    <QwikCityProvider>
+    <>
       <head>
         <meta charset="utf-8" />
         {!isDev && (
@@ -26,6 +27,6 @@ export default component$(() => {
         <RouterOutlet />
         {!isDev && <ServiceWorkerRegister />}
       </body>
-    </QwikCityProvider>
+    </>
   )
 })

@@ -1,8 +1,8 @@
 ---
-title: "Kubernetes Pod 네트워킹 이해하기 1부: Pod, Service, DNS"
-description: "Pod 안의 localhost 통신부터 Service, DNS, ClusterIP, EndpointSlice, kube-proxy 흐름까지 Kubernetes Pod 네트워킹의 기본 경로를 정리합니다."
+title: 'Kubernetes Pod 네트워킹 이해하기 1부: Pod, Service, DNS'
+description: 'Pod 안의 localhost 통신부터 Service, DNS, ClusterIP, EndpointSlice, kube-proxy 흐름까지 Kubernetes Pod 네트워킹의 기본 경로를 정리합니다.'
 date: 2026-06-18
-series: "Kubernetes Pod 네트워킹 이해하기"
+series: 'Kubernetes Pod 네트워킹 이해하기'
 seriesOrder: 1
 ---
 
