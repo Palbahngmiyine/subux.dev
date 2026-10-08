@@ -1,25 +1,13 @@
-/*
- * WHAT IS THIS FILE?
- *
- * It's the entry point for Cloudflare Pages when building for production.
- *
- * Learn more about the Cloudflare Pages integration here:
- * - https://qwik.dev/docs/deployments/cloudflare-pages/
- *
- */
 import {
-  createQwikCity,
+  createQwikRouter,
   type PlatformCloudflarePages,
-} from '@builder.io/qwik-city/middleware/cloudflare-pages'
-import qwikCityPlan from '@qwik-city-plan'
-import { manifest } from '@qwik-client-manifest'
+} from '@qwik.dev/router/middleware/cloudflare-pages'
 import render from './entry.ssr'
 
 declare global {
-  // eslint-disable-next-line
-  interface QwikCityPlatform extends PlatformCloudflarePages {}
+  type QwikRouterPlatform = PlatformCloudflarePages
 }
 
-const fetch = createQwikCity({ render, qwikCityPlan, manifest })
+const fetch = createQwikRouter({ render })
 
 export { fetch }

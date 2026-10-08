@@ -11,53 +11,43 @@
     "build.types": "tsc --incremental --noEmit",
     "deploy": "wrangler pages deploy ./dist",
     "dev": "vp dev --mode ssr",
-    "dev.debug": "node --inspect-brk ./node_modules/.bin/vp --mode ssr --force",
+    "dev.debug": "node --inspect-brk ./node_modules/vite-plus/bin/vp dev --mode ssr --force",
     "fmt": "vp fmt",
     "fmt.check": "vp fmt --check",
-    "lint": "NODE_OPTIONS='--experimental-strip-types --no-warnings' vp lint",
-    "lint.fix": "NODE_OPTIONS='--experimental-strip-types --no-warnings' vp lint --fix",
+    "lint": "vp lint",
+    "lint.fix": "vp lint --fix",
     "check": "vp check",
     "preview": "qwik build preview && vp preview --open",
-    "serve": "wrangler pages dev ./dist --compatibility-flags=nodejs_als",
+    "serve": "wrangler pages dev ./dist",
     "start": "vp dev --open --mode ssr",
-    "qwik": "qwik"
+    "qwik": "qwik",
+    "test": "node --test src/lib/*.test.ts"
   },
   "dependencies": {
-    "gray-matter": "^4.0.3",
-    "mermaid": "^11.15.0",
+    "mermaid": "^12.1.0",
     "rehype-highlight": "^7.0.2",
     "rehype-stringify": "^10.0.1",
     "remark-directive": "^4.0.0",
     "remark-gfm": "^4.0.1",
-    "remark-obsidian-callout": "^1.5.1",
     "remark-parse": "^11.0.0",
     "remark-rehype": "^11.1.2",
     "remark-wiki-link": "^2.0.1",
-    "unified": "^11.0.5"
+    "unified": "^11.0.5",
+    "yaml": "^2.9.1"
   },
   "devDependencies": {
-    "@builder.io/qwik": "^1.20.0",
-    "@builder.io/qwik-city": "^1.20.0",
-    "@tailwindcss/vite": "^4.3.0",
-    "@types/node": "^25.9.2",
-    "ignore": "^7.0.5",
-    "tailwindcss": "^4.3.0",
-    "typescript": "^6.0.3",
-    "vite": "npm:@voidzero-dev/vite-plus-core@^0.1.24",
-    "vite-plus": "latest",
-    "wrangler": "^4.98.0"
+    "@qwik.dev/core": "2.0.0-rc.2",
+    "@qwik.dev/router": "2.0.0-rc.2",
+    "@tailwindcss/vite": "^4.3.3",
+    "@types/node": "^24.10.0",
+    "tailwindcss": "^4.3.3",
+    "typescript": "^7.0.2",
+    "vite": "npm:@voidzero-dev/vite-plus-core@1.1.0",
+    "vite-plus": "1.1.0",
+    "wrangler": "^4.149.0"
   },
   "engines": {
-    "node": ">=20.0.0"
+    "node": "^22.18.0 || ^24.11.0 || >=26.0.0"
   },
-  "pnpm": {
-    "overrides": {
-      "vite": "npm:@voidzero-dev/vite-plus-core@latest",
-      "@builder.io/qwik>vite": "npm:@voidzero-dev/vite-plus-core@latest",
-      "@tailwindcss/vite>vite": "npm:@voidzero-dev/vite-plus-core@latest"
-    }
-  },
-  "trustedDependencies": [
-    "sharp"
-  ]
+  "packageManager": "pnpm@12.10.1"
 }

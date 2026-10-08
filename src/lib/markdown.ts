@@ -1,7 +1,6 @@
-import matter, { type GrayMatterFile } from 'gray-matter'
+import { parseDocument } from 'yaml'
 
 const BOM = '\ufeff'
-const FRONTMATTER_BLOCK = /^---\s*\r?\n([\s\S]*?)\r?\n---/
 const KEY_VALUE_LINE = /^(\s*)([A-Za-z0-9_.@-]+):(.*)$/
 const AMBIGUOUS_COLON = /:(\s|$)/
 
@@ -62,36 +61,50 @@ const quoteLineIfNeeded = (line: string): string => {
   return `${indent}${key}:${spacing}"${escaped}"${comment}`
 }
 
-const normalizeFrontmatterColons = (raw: string): string => {
-  const hasBom = raw.startsWith(BOM)
-  const input = hasBom ? raw.slice(1) : raw
-  const match = input.match(FRONTMATTER_BLOCK)
-  if (!match) {
-    return raw
-  }
-
-  const [, block] = match
-  const lines = block.split(/\r?\n/)
-  let mutated = false
-  const normalizedLines = lines.map((line) => {
-    const next = quoteLineIfNeeded(line)
-    if (next !== line) {
-      mutated = true
-    }
-    return next
-  })
-
-  if (!mutated) {
-    return raw
-  }
-
-  const newline = block.includes('\r\n') ? '\r\n' : '\n'
-  const normalizedBlock = `---${newline}${normalizedLines.join(newline)}${newline}---`
-  const replaced = input.replace(FRONTMATTER_BLOCK, normalizedBlock)
-  return hasBom ? `${BOM}${replaced}` : replaced
+export interface MarkdownFile {
+  content: string
+  data: Record<string, unknown>
 }
 
-export const parseMarkdown = (raw: string): GrayMatterFile<string> => {
-  const normalized = normalizeFrontmatterColons(raw)
-  return matter(normalized)
+export const parseMarkdown = (raw: string): MarkdownFile => {
+  const input = raw.startsWith(BOM) ? raw.slice(1) : raw
+  const opening = /^---([^\r\n]*)\r?\n/.exec(input)
+  if (!opening) return { content: input, data: {} }
+
+  const language = opening[1].trim().toLowerCase()
+  if (language && language !== 'yaml' && language !== 'yml') {
+    throw new Error('Only YAML frontmatter is supported')
+  }
+
+  const remainder = input.slice(opening[0].length)
+  const closing = /^---[ \t]*(?:\r?\n|$)/m.exec(remainder)
+  if (!closing) throw new Error('Unclosed YAML frontmatter')
+
+  const frontmatter = remainder.slice(0, closing.index)
+  const normalized = frontmatter
+    .split(/\r?\n/)
+    .map(quoteLineIfNeeded)
+    .join('\n')
+  const document = parseDocument(normalized, {
+    schema: 'core',
+    customTags: ['timestamp'],
+    stringKeys: true,
+  })
+  // Reject unknown tags as well as invalid YAML instead of silently treating
+  // executable-language tags as strings.
+  if (document.errors.length || document.warnings.length) {
+    throw document.errors[0] ?? document.warnings[0]
+  }
+
+  // Frontmatter needs no aliases; disabling them also rejects cyclic metadata
+  // and prevents alias expansion from consuming unbounded resources.
+  const data: unknown = document.toJS({ maxAliasCount: 0 }) ?? {}
+  if (typeof data !== 'object' || Array.isArray(data) || data instanceof Date) {
+    throw new Error('YAML frontmatter must be a mapping')
+  }
+
+  return {
+    content: remainder.slice(closing.index + closing[0].length),
+    data: data as Record<string, unknown>,
+  }
 }

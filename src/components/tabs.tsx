@@ -1,5 +1,5 @@
-import { component$, Slot } from '@builder.io/qwik'
-import { useLocation } from '@builder.io/qwik-city'
+import { component$, Slot } from '@qwik.dev/core'
+import { useLocation } from '@qwik.dev/router'
 
 interface Tab {
   id: string
