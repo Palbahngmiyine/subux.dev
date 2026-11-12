@@ -4,22 +4,20 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-This is a personal blog/portfolio website (subux.dev) built with Qwik 2 and deployed to Cloudflare Pages. The site renders markdown articles with frontmatter metadata and supports wiki-style links and Obsidian callouts.
+This is a personal blog/portfolio website (subux.dev) built as a static site with Subux (https://github.com/Palbahngmiyine/subux), an OCaml static site generator, and deployed to Cloudflare Pages. Subux renders Markdown articles with frontmatter metadata, wiki-style links and Obsidian callouts. There is no application framework and no server code.
 
 ## Commands
 
 ### Development
 
-- `pnpm dev` - Start development server in SSR mode
-- `pnpm start` - Alternative dev server with auto-open
-- `pnpm dev.debug` - Start dev server with Node.js inspector for debugging
+- `pnpm dev` - Build the site, then serve `dist/` with Wrangler. Run it again after an edit; there is no watch mode
+- `pnpm serve` - Serve the last build with Wrangler
 
 ### Building
 
-- `pnpm build` - Full production build (client + server)
-- `pnpm build.client` - Build client-side only
-- `pnpm build.server` - Build server adapter for Cloudflare Pages
-- `pnpm build.types` - Type-check without emitting files
+- `pnpm build` - Type-check, lint, then build the site into `dist/`
+- `pnpm build.site` - Build the site only (`node scripts/build.ts`)
+- `pnpm build.types` - Type-check the build scripts without emitting files
 
 ### Code Quality
 
@@ -28,46 +26,44 @@ This is a personal blog/portfolio website (subux.dev) built with Qwik 2 and depl
 - `pnpm fmt` - Format code with Oxfmt (via Vite+)
 - `pnpm fmt.check` - Check formatting without modifying
 - `pnpm check` - Run both lint and format checks
-- `pnpm test` - Run Markdown preservation and security tests with the Node test runner
+- `pnpm test` - Run the build-script unit tests and the Markdown preservation and security tests against a real build, with the Node test runner
 
 ### Deployment
 
-- `pnpm serve` - Test production build locally with Wrangler (uses the nodejs_compat flag in wrangler.toml)
-- `pnpm deploy` - Deploy to Cloudflare Pages
+- `pnpm deploy` - Deploy `dist/` to Cloudflare Pages by hand. Cloudflare Pages also builds and deploys every pushed branch
 
 ## Architecture
 
-### Content System
+### Subux workspace
 
-Articles are stored in `src/articles/` as Markdown/MDX files organized by year (e.g., `src/articles/2025/`). The content system uses:
+`src/` is a Subux blog workspace, built with `subux build -i src -o dist`:
 
-- **Frontmatter parsing**: `yaml` extracts metadata (title, description, date); the local parser rejects executable languages and aliases
-- **Markdown processing pipeline**: unified + remark + rehype with plugins:
-  - `remark-gfm` - GitHub Flavored Markdown
-  - `remark-wiki-link` - Wiki-style `[[links]]` (converts to internal URL-friendly slugs)
-  - `remark-obsidian-callout` - Obsidian-style callout blocks
-  - `remark-directive` - Generic directive syntax support
-- Local `remarkCallout` - Obsidian callout blocks without raw HTML
-- Local `rehypeSafeUrls` - Safe protocols for rendered links and media
+- `src/subux.json` - Site title, base URL, GitHub link, favicon and manifest links, and the paths of the custom CSS and JS
+- `src/articles/`, `src/tech/`, `src/translations/` - Markdown articles, one folder per home page tab. The tab names and the translation disclaimer are Subux blog-mode defaults
+- `src/public/` - Files copied to the site root as they are (`_headers`, favicons, `manifest.json`, `service-worker.js`)
+- `src/design/tokens.json` - Design tokens compiled into `--sx-*` CSS variables. Every color has one value, so the site ignores dark mode
+- `src/theme/custom.css` - Only what differs from the Subux default theme. It is loaded after the theme
+- `src/theme/custom.js` - Tab link addresses, Mermaid rendering and service-worker cleanup
+
+### Build scripts
+
+The scripts are TypeScript that Node runs directly (type stripping), so they use erasable syntax only.
+
+- `scripts/subux.ts` - Downloads the pinned Subux release for the platform and verifies its SHA-256. `SUBUX_BIN` overrides it with a local executable
+- `scripts/build.ts` - Runs Subux, applies the adjustments to every HTML page and the sitemap, and copies Mermaid's browser build to `dist/vendor/`
+- `scripts/postprocess.ts` - Pure functions that adjust Subux output: highlight.js tokens in code blocks (lowlight, the same grammars and aliases as before), eager images, head metadata, and trailing-slash URLs. Each one throws when the Subux markup it expects is missing
 
 ### Routing
 
-- **Home page** (`src/routes/index.tsx`): Lists all articles by scanning `src/articles/**/*.{md,mdx}` at build time using `import.meta.glob`
-- **Article pages** (`src/routes/[...slug]/index.tsx`): Catch-all route that:
-  - Accepts slugs like `2025/my-article` or `2025/folder/nested`
-  - Looks for files in this priority: `{slug}.md`, `{slug}.mdx`, `{slug}/@index.md`, `{slug}/@index.mdx`, `{slug}/index.md`, `{slug}/index.mdx`
-  - Returns 404 for missing articles or `.well-known` paths (silently ignored)
-  - Processes markdown on the server side in the route loader
+Cloudflare Pages serves the static files:
 
-### SSR Configuration
-
-The app uses Qwik 2 with Vite+ (Vite 8) and SSR. The Cloudflare adapter bundles the Markdown dependencies and selects Worker conditions with `ssr.resolve.conditions` so browser-only DOM exports do not enter the server bundle. The adapter manages the Node async-hooks external needed by Qwik.
-
-Qwik core/router are pinned together to 2.0.0-rc.2. Tests use `node --test`, not Qwik's optional Vitest integration.
+- **Home page** (`/`): all three article lists; `?tab=tech` or `?tab=translations` selects a tab in the browser. `/articles/`, `/tech/` and `/translations/` are the same page with that tab selected, for visitors without JavaScript
+- **Article pages**: `src/<collection>/<path>.md` becomes `dist/<path>/index.html`, served at `/<path>/`. `/<path>` redirects there
+- **404**: `dist/404.html`
 
 ### Deployment Target
 
-Cloudflare Pages with Node.js compatibility (`nodejs_compat` flag in `wrangler.toml`). The build adapter is in `adapters/cloudflare-pages/vite.config.ts`.
+Cloudflare Pages, connected to the GitHub repository: a push builds the site with the `build` script and publishes `dist` (`wrangler.toml`). The build needs network access to download the Subux release from GitHub.
 
 ## Code Style
 
@@ -79,17 +75,11 @@ Using Vite+ (Oxlint + Oxfmt, not Prettier/ESLint/Biome):
 - Line width: 80 characters
 - `no-var` and `prefer-const` enforced
 - `eqeqeq` enforced (use `===`)
-- `react/no-danger` disabled (needed for article rendering)
-
-## Path Aliases
-
-`~/*` maps to `./src/*` (configured in `tsconfig.json`)
 
 ## Important Patterns
 
-1. **Article slug computation**: Remove extensions, handle index files specially (slug becomes parent directory)
-2. **Date formatting**: Each route handles date formatting inline
-3. **Caching strategy** (in `src/routes/layout.tsx`):
-   - `staleWhileRevalidate`: 7 days
-   - `maxAge`: 5 seconds
-4. **Global styles**: TailwindCSS v4 via `@tailwindcss/vite` plugin, custom styles in `src/global.css`
+1. **The site must look the same after a change to the theme or the Subux version**: compare rendered pages before and after, at phone and desktop widths
+2. **Theme changes go in `src/theme/custom.css` or `src/design/tokens.json`**, never in generated files. Use the `--sx-*` variables and their `--color-*`, `--space-*` aliases instead of literal values
+3. **Article slug**: the file path below its collection folder without the extension. Two collections must not hold the same path
+4. **Subux upgrades**: change the version and the four checksums in `scripts/subux.ts` together, then run `pnpm test`. A failing adjustment in `scripts/postprocess.ts` names the Subux markup that changed
+5. **Caching**: HTML is revalidated on every request (Cloudflare Pages default). `src/public/_headers` marks `/vendor/mermaid/*` immutable, and Subux marks its fingerprinted theme stylesheet immutable

@@ -1,27 +1,20 @@
 {
   "compilerOptions": {
-    "allowJs": true,
-    "target": "ES2017",
-    "module": "ES2022",
-    "lib": ["es2022", "DOM", "WebWorker", "DOM.Iterable"],
-    "jsx": "react-jsx",
-    "jsxImportSource": "@qwik.dev/core",
+    "target": "ES2023",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "lib": ["ES2023"],
+    "types": ["node"],
     "strict": true,
     "forceConsistentCasingInFileNames": true,
-    "resolveJsonModule": true,
-    "moduleResolution": "Bundler",
-    "esModuleInterop": true,
     "skipLibCheck": true,
-    "incremental": true,
     "isolatedModules": true,
+    "verbatimModuleSyntax": true,
+    "erasableSyntaxOnly": true,
+    "allowImportingTsExtensions": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "outDir": "tmp",
-    "noEmit": true,
-    "paths": {
-      "~/*": ["./src/*"]
-    },
-    "allowImportingTsExtensions": true
+    "noEmit": true
   },
-  "include": ["src", "./*.d.ts", "./*.config.ts", "adapters/**/*.ts"]
+  "include": ["scripts", "./*.config.ts"]
 }
