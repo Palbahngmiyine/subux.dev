@@ -68,10 +68,12 @@ const SUBUX_TOKEN_TAG = /<span class="hljs-[a-z_]+">|<\/span>/g
  * tokens with its own lighter tokenizer; its spans are dropped and the code
  * text is highlighted again.
  */
-export const highlightCodeBlocks = (html: string): string =>
-  html.replace(
+export const highlightCodeBlocks = (html: string): string => {
+  let blocks = 0
+  const result = html.replace(
     CODE_BLOCK,
     (_, classAttr: string | undefined, inner: string) => {
+      blocks++
       const escaped = inner.replace(SUBUX_TOKEN_TAG, '')
       if (escaped.includes('<')) {
         throw new Error(
@@ -109,6 +111,17 @@ export const highlightCodeBlocks = (html: string): string =>
       })
     },
   )
+
+  // Every <pre> on a page is a fenced code block. One the pattern missed
+  // would silently keep Subux's own tokens.
+  const pres = html.match(/<pre[\s>]/g)?.length ?? 0
+  if (pres !== blocks) {
+    throw new Error(
+      `Expected every <pre> in the Subux output to open a code block (${blocks} of ${pres} matched)`,
+    )
+  }
+  return result
+}
 
 // --- Images ------------------------------------------------------------------
 
@@ -160,9 +173,6 @@ export const restoreHead = (html: string): string =>
 
 // --- URLs --------------------------------------------------------------------
 
-const escapeRegExp = (text: string): string =>
-  text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
-
 const CANONICAL_LINK = /<link rel="canonical" href="([^"]*)">/g
 
 /**
@@ -203,14 +213,17 @@ export const useTrailingSlashUrl = (html: string, pagePath: string): string => {
   )
 }
 
-/** Give every sitemap location below the site root its trailing slash. */
-export const useTrailingSlashSitemap = (
-  xml: string,
-  baseUrl: string,
-): string => {
-  const base = escapeRegExp(baseUrl.replace(/\/$/, ''))
-  return xml.replace(
-    new RegExp(`<loc>(${base}/[^<]*[^</])</loc>`, 'g'),
-    '<loc>$1/</loc>',
-  )
+const SITEMAP_LOCATION = /<loc>([^<]*)<\/loc>/g
+
+/** End every sitemap location with a slash, as the pages are served. */
+export const useTrailingSlashSitemap = (xml: string): string => {
+  let locations = 0
+  const result = xml.replace(SITEMAP_LOCATION, (_, url: string) => {
+    locations++
+    return `<loc>${url.endsWith('/') ? url : `${url}/`}</loc>`
+  })
+  if (locations === 0) {
+    throw new Error('Expected <loc> entries in the Subux sitemap')
+  }
+  return result
 }

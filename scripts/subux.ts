@@ -3,7 +3,9 @@ import { createHash } from 'node:crypto'
 import {
   existsSync,
   mkdirSync,
+  mkdtempSync,
   readFileSync,
+  renameSync,
   rmSync,
   writeFileSync,
 } from 'node:fs'
@@ -67,18 +69,28 @@ export const ensureSubux = async (cacheDir: string): Promise<string> => {
     )
   }
 
+  // Extract in a staging directory and move the release into place in one
+  // step, so an interrupted or concurrent build never leaves a partial binary
+  // that later builds would trust.
   mkdirSync(cacheDir, { recursive: true })
-  const archivePath = path.join(cacheDir, `${name}.tar.gz`)
-  writeFileSync(archivePath, archive)
+  const staging = mkdtempSync(path.join(cacheDir, 'download-'))
   try {
-    execFileSync('tar', ['-xzf', archivePath, '-C', cacheDir], {
+    const archivePath = path.join(staging, `${name}.tar.gz`)
+    writeFileSync(archivePath, archive)
+    execFileSync('tar', ['-xzf', archivePath, '-C', staging], {
       stdio: 'inherit',
     })
+    if (!existsSync(path.join(staging, name, 'subux'))) {
+      throw new Error(`${name}.tar.gz did not contain ${name}/subux`)
+    }
+    try {
+      renameSync(path.join(staging, name), path.join(cacheDir, name))
+    } catch (error) {
+      // Another build installed the same release first.
+      if (!existsSync(binary)) throw error
+    }
   } finally {
-    rmSync(archivePath, { force: true })
-  }
-  if (!existsSync(binary)) {
-    throw new Error(`${name}.tar.gz did not contain ${name}/subux`)
+    rmSync(staging, { recursive: true, force: true })
   }
   return binary
 }

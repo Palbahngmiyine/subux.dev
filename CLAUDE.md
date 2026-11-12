@@ -63,7 +63,7 @@ Cloudflare Pages serves the static files:
 
 ### Deployment Target
 
-Cloudflare Pages, connected to the GitHub repository: a push builds the site with the `build` script and publishes `dist` (`wrangler.toml`). The build needs network access to download the Subux release from GitHub.
+Cloudflare Pages, connected to the GitHub repository: a push builds the site and publishes `dist`. `wrangler.toml` names the output directory; the build command is a Cloudflare project setting and has to run the `build` script. The build needs network access to download the Subux release from GitHub.
 
 ## Code Style
 

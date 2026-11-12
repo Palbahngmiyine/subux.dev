@@ -221,16 +221,41 @@ test('a page without its canonical link or matching metadata stops the build', (
   )
 })
 
-test('sitemap locations below the root end with a slash', () => {
+test('every sitemap location ends with a slash', () => {
   assert.equal(
     useTrailingSlashSitemap(
       '<url><loc>https://www.subux.dev/</loc></url>\n' +
         '<url><loc>https://www.subux.dev/2026/POST</loc></url>\n' +
+        '<url><loc>https://www.subux.dev/a&amp;b</loc></url>\n' +
         '<url><loc>https://www.subux.dev/two-pizza-team/</loc></url>',
-      'https://www.subux.dev',
     ),
     '<url><loc>https://www.subux.dev/</loc></url>\n' +
       '<url><loc>https://www.subux.dev/2026/POST/</loc></url>\n' +
+      '<url><loc>https://www.subux.dev/a&amp;b/</loc></url>\n' +
       '<url><loc>https://www.subux.dev/two-pizza-team/</loc></url>',
   )
+})
+
+test('a sitemap without locations stops the build', () => {
+  assert.throws(
+    () => useTrailingSlashSitemap('<urlset><url><link>x</link></url></urlset>'),
+    /Expected <loc> entries/,
+  )
+})
+
+test('a <pre> that is not a recognized code block stops the build', () => {
+  // A Subux release that changes the wrapper must not pass silently with
+  // its own tokens left in place.
+  for (const html of [
+    '<pre class="shiki"><code class="language-sh">echo hi\n</code></pre>',
+    '<pre><code data-lang="sh" class="language-sh">echo hi\n</code></pre>',
+    '<pre>plain preformatted text</pre>',
+  ]) {
+    assert.throws(
+      () => highlightCodeBlocks(html),
+      /every <pre> in the Subux output to open a code block/,
+      html,
+    )
+  }
+  assert.doesNotThrow(() => highlightCodeBlocks('<p>no code here</p>'))
 })

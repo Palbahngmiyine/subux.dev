@@ -73,14 +73,10 @@ export const buildSite = async (
   outputDir: string,
 ): Promise<string[]> => {
   const subux = await ensureSubux(subuxCacheDir)
-  const { baseUrl } = JSON.parse(
-    readFileSync(path.join(inputDir, 'subux.json'), 'utf8'),
-  ) as { baseUrl: string }
 
   rmSync(outputDir, { recursive: true, force: true })
   execFileSync(subux, ['build', '-i', inputDir, '-o', outputDir], {
-    stdio: ['ignore', 'inherit', 'pipe'],
-    encoding: 'utf8',
+    stdio: ['ignore', 'inherit', 'inherit'],
   })
 
   const pages = htmlFiles(outputDir)
@@ -97,10 +93,7 @@ export const buildSite = async (
   }
 
   const sitemap = path.join(outputDir, 'sitemap.xml')
-  writeFileSync(
-    sitemap,
-    useTrailingSlashSitemap(readFileSync(sitemap, 'utf8'), baseUrl),
-  )
+  writeFileSync(sitemap, useTrailingSlashSitemap(readFileSync(sitemap, 'utf8')))
 
   vendorMermaid(outputDir)
   const profile = readFileSync(
