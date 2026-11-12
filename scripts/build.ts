@@ -91,7 +91,6 @@ export const buildSite = async (
       file,
       useTrailingSlashUrl(
         restoreHead(loadImagesEagerly(highlightCodeBlocks(html))),
-        baseUrl,
         page,
       ),
     )

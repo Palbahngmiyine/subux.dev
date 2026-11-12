@@ -160,7 +160,6 @@ test('a head without the expected Subux markup stops the build', () => {
 test('an article page names its own URL with the trailing slash', () => {
   const html = useTrailingSlashUrl(
     subuxHead('https://www.subux.dev/2026/POST'),
-    'https://www.subux.dev',
     '2026/POST/index.html',
   )
   assert.ok(
@@ -176,15 +175,50 @@ test('an article page names its own URL with the trailing slash', () => {
   assert.ok(html.includes('"url":"https://www.subux.dev/2026/POST/"'))
 })
 
+test('URLs with Korean, spaces and ampersands get the slash too', () => {
+  const korean = useTrailingSlashUrl(
+    subuxHead('https://www.subux.dev/2026/한글 글'),
+    '2026/한글 글/index.html',
+  )
+  assert.ok(korean.includes('href="https://www.subux.dev/2026/한글 글/">'))
+  assert.ok(korean.includes('"url":"https://www.subux.dev/2026/한글 글/"'))
+
+  // Subux escapes `&` in attributes but not in JSON-LD.
+  const head = subuxHead('https://www.subux.dev/a&amp;b').replace(
+    '"url":"https://www.subux.dev/a&amp;b"',
+    '"url":"https://www.subux.dev/a&b"',
+  )
+  const ampersand = useTrailingSlashUrl(head, 'a&b/index.html')
+  assert.ok(ampersand.includes('href="https://www.subux.dev/a&amp;b/">'))
+  assert.ok(ampersand.includes('content="https://www.subux.dev/a&amp;b/">'))
+  assert.ok(ampersand.includes('"url":"https://www.subux.dev/a&b/"'))
+})
+
 test('home, tab and error pages keep their URLs', () => {
   const home = subuxHead('https://www.subux.dev/')
-  for (const page of ['index.html', 'tech/index.html', '404.html']) {
-    assert.equal(
-      useTrailingSlashUrl(home, 'https://www.subux.dev/', page),
-      home,
-      page,
-    )
+  for (const page of ['index.html', 'tech/index.html']) {
+    assert.equal(useTrailingSlashUrl(home, page), home, page)
   }
+  const notFound = subuxHead('https://www.subux.dev/404.html')
+  assert.equal(useTrailingSlashUrl(notFound, '404.html'), notFound)
+})
+
+test('a page without its canonical link or matching metadata stops the build', () => {
+  assert.throws(
+    () => useTrailingSlashUrl('<head></head>', '2026/POST/index.html'),
+    /exactly one canonical link/,
+  )
+  assert.throws(
+    () =>
+      useTrailingSlashUrl(
+        subuxHead('https://www.subux.dev/2026/POST').replace(
+          'property="og:url" content="https://www.subux.dev/2026/POST"',
+          'property="og:url" content="https://www.subux.dev/other"',
+        ),
+        '2026/POST/index.html',
+      ),
+    /exactly one og:url/,
+  )
 })
 
 test('sitemap locations below the root end with a slash', () => {

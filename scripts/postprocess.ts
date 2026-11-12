@@ -163,26 +163,27 @@ export const restoreHead = (html: string): string =>
 const escapeRegExp = (text: string): string =>
   text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
 
+const CANONICAL_LINK = /<link rel="canonical" href="([^"]*)">/g
+
 /**
  * Cloudflare Pages serves `dir/index.html` at `/dir/` and redirects `/dir`
  * there, so an article's own URL ends with a slash. Subux writes it without
  * one; fix the canonical link, Open Graph URL and JSON-LD of that page.
  * `pagePath` is the output path of the page, such as `2026/post/index.html`.
  */
-export const useTrailingSlashUrl = (
-  html: string,
-  baseUrl: string,
-  pagePath: string,
-): string => {
-  if (!pagePath.endsWith('/index.html')) return html
-  const url = `${baseUrl.replace(/\/$/, '')}/${pagePath.slice(0, -'/index.html'.length)}`
-  const canonical = `<link rel="canonical" href="${url}">`
-  // Tab pages such as /tech/ share the home page's canonical URL.
-  if (!html.includes(canonical)) return html
+export const useTrailingSlashUrl = (html: string, pagePath: string): string => {
+  const links = [...html.matchAll(CANONICAL_LINK)]
+  if (links.length !== 1) {
+    throw new Error('Expected exactly one canonical link in the Subux output')
+  }
+  const url = links[0][1]
+  // Right as written: the home page, the tab pages that share its canonical
+  // URL, and pages served under their file name, such as 404.html.
+  if (url.endsWith('/') || !pagePath.endsWith('/index.html')) return html
 
   let result = replaceOnce(
     html,
-    canonical,
+    `<link rel="canonical" href="${url}">`,
     `<link rel="canonical" href="${url}/">`,
     'canonical link',
   )
@@ -192,7 +193,14 @@ export const useTrailingSlashUrl = (
     `<meta property="og:url" content="${url}/">`,
     'og:url',
   )
-  return replaceOnce(result, `"url":"${url}"`, `"url":"${url}/"`, 'JSON-LD url')
+  // JSON-LD holds the same URL without HTML attribute escaping.
+  const jsonUrl = JSON.stringify(decodeEntities(url)).slice(1, -1)
+  return replaceOnce(
+    result,
+    `"url":"${jsonUrl}"`,
+    `"url":"${jsonUrl}/"`,
+    'JSON-LD url',
+  )
 }
 
 /** Give every sitemap location below the site root its trailing slash. */
