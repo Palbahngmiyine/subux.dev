@@ -5,13 +5,3 @@ allowBuilds:
 minimumReleaseAgeExclude:
   - miniflare@5.20261006.1-alpha
   - wrangler@4.149.0
-overrides:
-  vite: npm:@voidzero-dev/vite-plus-core@1.1.0
-  # Security fixes for versions retained by upstream dependency ranges.
-  'postcss@<8.5.23': 8.5.29
-  'source-map-js@<1.2.2': 1.2.2
-# Vite+ 1.1.0 bundles Vite 8.3.3; its package version differs from Vite's.
-peerDependencyRules:
-  allowedVersions:
-    '@vitest/mocker>vite': '1.1.0'
-    'vitest>vite': '1.1.0'

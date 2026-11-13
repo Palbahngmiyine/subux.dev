@@ -7,6 +7,10 @@
   "mode": "blog",
   "enableSearch": false,
   "inlineCss": false,
+  "themeColor": "#7fcfff",
+  "fontDisplay": "swap",
+  "lazyImages": false,
+  "trailingSlash": true,
   "customCss": "theme/custom.css",
   "customJs": "theme/custom.js",
   "headLinks": [

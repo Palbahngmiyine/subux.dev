@@ -2,30 +2,15 @@
   "name": "subux.dev",
   "private": true,
   "description": "A homepage that Introduce about subin",
-  "type": "module",
   "scripts": {
-    "build": "tsc --noEmit && vp lint && node scripts/build.ts",
-    "build.site": "node scripts/build.ts",
-    "build.types": "tsc --noEmit",
+    "build": "rm -rf dist && subux build -i src -o dist",
+    "check": "subux check -i src",
     "deploy": "wrangler pages deploy ./dist",
-    "dev": "node scripts/build.ts && wrangler pages dev ./dist",
-    "fmt": "vp fmt",
-    "fmt.check": "vp fmt --check",
-    "lint": "vp lint",
-    "lint.fix": "vp lint --fix",
-    "check": "vp check",
-    "serve": "wrangler pages dev ./dist",
-    "test": "node --test scripts/*.test.ts"
+    "dev": "pnpm build && wrangler pages dev ./dist",
+    "serve": "wrangler pages dev ./dist"
   },
   "devDependencies": {
-    "@types/hast": "^3.0.4",
-    "@types/node": "^24.10.0",
-    "hast-util-to-html": "^9.0.5",
-    "lowlight": "^3.3.0",
-    "mermaid": "^12.1.0",
-    "typescript": "^7.0.2",
-    "vite": "npm:@voidzero-dev/vite-plus-core@1.1.0",
-    "vite-plus": "1.1.0",
+    "subux": "https://github.com/Palbahngmiyine/subux/releases/download/v0.3.0/subux-0.3.0.tgz",
     "wrangler": "^4.149.0"
   },
   "engines": {
