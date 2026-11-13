@@ -33,6 +33,8 @@ for (const tab of document.querySelectorAll('a.tab-link[data-tab-id]')) {
 // Mermaid diagrams are authored as fenced code blocks. Claim them before the
 // theme's own loader runs (it runs after this module), so they render once,
 // with this site's Mermaid version and colors.
+const MERMAID =
+  'https://cdn.jsdelivr.net/npm/mermaid@12.1.0/dist/mermaid.esm.min.mjs'
 const mermaidBlocks = Array.from(
   document.querySelectorAll('.article-content pre > code.language-mermaid'),
 )
@@ -43,7 +45,7 @@ for (const block of mermaidBlocks) {
 const renderMermaid = async () => {
   if (mermaidBlocks.length === 0) return
 
-  const { default: mermaid } = await import('/vendor/mermaid.mjs')
+  const { default: mermaid } = await import(MERMAID)
 
   mermaid.initialize({
     startOnLoad: false,
